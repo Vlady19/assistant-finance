@@ -1,0 +1,48 @@
+/Users/dimitri/pdf-text-modifier/Python/assistant-finance/.venv/lib/python3.14/site-packages/joblib/externals/loky/backend/context.py:134: UserWarning: Could not find the number of physical cores for the following reason:
+invalid literal for int() with base 10: ''
+Returning the number of logical cores instead. You can silence this warning by setting LOKY_MAX_CPU_COUNT to the number of cores you want to use.
+  warnings.warn(
+  File "/Users/dimitri/pdf-text-modifier/Python/assistant-finance/.venv/lib/python3.14/site-packages/joblib/externals/loky/backend/context.py", line 264, in _count_physical_cores
+    cpu_count_physical = _count_physical_cores_darwin()
+  File "/Users/dimitri/pdf-text-modifier/Python/assistant-finance/.venv/lib/python3.14/site-packages/joblib/externals/loky/backend/context.py", line 420, in _count_physical_cores_darwin
+    return int(cpu_info)
+{
+  "qualite": {
+    "familles_initiales": 4595,
+    "familles_retenues": 4532,
+    "familles_exclues": 63,
+    "fin_nul": 52,
+    "revenu_nul": 11
+  },
+  "effectif_train": 3625,
+  "effectif_test": 907,
+  "comparaisons_train": [
+    {
+      "k": 2,
+      "silhouette_train": 0.2606344991450761
+    },
+    {
+      "k": 3,
+      "silhouette_train": 0.2952035968136247
+    },
+    {
+      "k": 4,
+      "silhouette_train": 0.3376131793849883
+    }
+  ],
+  "silhouette_test": 0.3121144009777748,
+  "stabilite_initialisations": [
+    {
+      "graine": 7,
+      "ari_test": 0.9734139929074965
+    },
+    {
+      "graine": 21,
+      "ari_test": 0.961764982621707
+    },
+    {
+      "graine": 84,
+      "ari_test": 1.0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "montant_eur": 10000,
+  "horizon_annees": 15,
+  "tolerance_risque": "prudent",
+  "epargne_precaution_mois": 6,
+  "resident_francais": true,
+  "age": 62,
+  "part_actions_actuelle": 0.43,
+  "liquidites_mois_revenu": 2.7,
+  "ratio_dette_actifs": 0.09
+}

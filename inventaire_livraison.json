@@ -1,0 +1,415 @@
+{
+  "livraison": "V6 — comparaison SCF facultative et graphique",
+  "cree_utc": "2026-09-29T10:05:33.213616+00:00",
+  "validation_evolution_scf": {
+    "tests_locaux": 41,
+    "reussis": 41,
+    "journal": "reports/tests_comparaison_scf.log",
+    "parcours_navigateur": "Analyse initiale, choix de comparaison, montants fictifs, histogrammes et groupe calculé",
+    "campagnes_api_relancees": false
+  },
+  "verification_preservation_livraison_precedente": {
+    "copie_initiale": {
+      "fichiers_verifies": 28,
+      "differences": []
+    },
+    "projet_original": {
+      "fichiers_verifies": 28,
+      "differences": [
+        "app/regles.py"
+      ]
+    }
+  },
+  "exclusions": [
+    ".env et secrets",
+    ".venv",
+    "caches Python",
+    ".git"
+  ],
+  "note": "Le manifeste ne contient pas sa propre empreinte. Les données SCF publiques sont incluses dans cette sauvegarde, mais ignorées par Git.",
+  "comptage": {
+    "modifié": 19,
+    "conservé": 9,
+    "ajouté": 35
+  },
+  "fichiers": [
+    {
+      "fichier": ".env.example",
+      "etat": "modifié",
+      "octets": 42,
+      "sha256": "dacd4bbde144ff775617152eb6db189ed1f37ddaf679081fd23bac01020138b2"
+    },
+    {
+      "fichier": ".gitignore",
+      "etat": "modifié",
+      "octets": 102,
+      "sha256": "80d65fe9ca76ebd021bcdc4ed20a9d43a859918a57ed797b94f65a4945a30dbb"
+    },
+    {
+      "fichier": "README.md",
+      "etat": "modifié",
+      "octets": 10627,
+      "sha256": "8fa35d9ba0f0cb54def4346361c593f424b9db28937f53f412de1b3fa6caf5b5"
+    },
+    {
+      "fichier": "app/__init__.py",
+      "etat": "conservé",
+      "octets": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "fichier": "app/clustering.py",
+      "etat": "ajouté",
+      "octets": 3406,
+      "sha256": "6f1979611c5b8e189eff34a5dd49aefb9f9f76f38bfd4e8e1c27e94ba35d945d"
+    },
+    {
+      "fichier": "app/comparaison_scf.py",
+      "etat": "ajouté",
+      "octets": 6097,
+      "sha256": "d08b6845c2523f35643d1661159dd894d6224b6a372f1e6fdbb7476fea39df5a"
+    },
+    {
+      "fichier": "app/config.py",
+      "etat": "modifié",
+      "octets": 743,
+      "sha256": "d3ce1a3be0e8eba23c491d953e403ea5a710ee1eb8da942eb651a46d8c3dfcf0"
+    },
+    {
+      "fichier": "app/conversation.py",
+      "etat": "modifié",
+      "octets": 4621,
+      "sha256": "f51d36c80516194a33fede390a299413f6bebf433f82bf9d7b0dcf1268fba859"
+    },
+    {
+      "fichier": "app/entrainement.py",
+      "etat": "ajouté",
+      "octets": 6038,
+      "sha256": "eef8d169553e2070254815a3e2cbd4073c90f712131c4e8402502b6d6f10940e"
+    },
+    {
+      "fichier": "app/features.py",
+      "etat": "ajouté",
+      "octets": 874,
+      "sha256": "411c6dff544970bba0c48d975f147f9b007d5814ecd532d1121e5fffa3424ee0"
+    },
+    {
+      "fichier": "app/intents.py",
+      "etat": "modifié",
+      "octets": 7447,
+      "sha256": "ec8364cf2b3cc4c32f04e5208ba4a7f3c2c41a96581bf2aa7a7889dc20e8cdb7"
+    },
+    {
+      "fichier": "app/inventaire_donnees.py",
+      "etat": "conservé",
+      "octets": 9185,
+      "sha256": "8f795b7b07901cd760959bc27aa487febb381d22aed6492a5aa601aa0ae9fd68"
+    },
+    {
+      "fichier": "app/llm.py",
+      "etat": "modifié",
+      "octets": 3319,
+      "sha256": "fa20e0d844434860f40c0afaf9800eb8f0f41a7b2a3d86ee1bf97cdd1368ad52"
+    },
+    {
+      "fichier": "app/models.py",
+      "etat": "modifié",
+      "octets": 5968,
+      "sha256": "e41e8537068e9b946f988caf7d72fd6f768a43422c0c1b2d88fe25718a7a5c7d"
+    },
+    {
+      "fichier": "app/pipeline.py",
+      "etat": "modifié",
+      "octets": 10001,
+      "sha256": "ea108d971c755b642dca63a6aa653139ae3cd81850af385848d4ea14ae5891fd"
+    },
+    {
+      "fichier": "app/preparer_donnees.py",
+      "etat": "ajouté",
+      "octets": 1862,
+      "sha256": "9dd4522c4b24a39fbf351778219dacd1aa746e292d3250559f70c36d723f68b0"
+    },
+    {
+      "fichier": "app/redaction.py",
+      "etat": "modifié",
+      "octets": 6130,
+      "sha256": "65ae5a7021a8773657e0f75d3a92e796e1b8fdb75251f33f1962f34ad17674f6"
+    },
+    {
+      "fichier": "app/regles.py",
+      "etat": "modifié",
+      "octets": 7851,
+      "sha256": "fece22f0702f17cafdaa66a922e293f411b42fa33bd570ceab251478ee0f8d10"
+    },
+    {
+      "fichier": "app/validation.py",
+      "etat": "modifié",
+      "octets": 2647,
+      "sha256": "b81d8bdc19258a7e01fd1d49cc56281750c1eeaf1d72fdc99308a9d3ec0a77e7"
+    },
+    {
+      "fichier": "app/vue_comparaison.py",
+      "etat": "ajouté",
+      "octets": 9502,
+      "sha256": "d5e8955a10585053d8ca6d08e92899f2ebf5c805f1f89228fdc8d1bc2180bf7a"
+    },
+    {
+      "fichier": "app_streamlit.py",
+      "etat": "modifié",
+      "octets": 6679,
+      "sha256": "5b284a923dec147e389549ef64e130cc886c2508a0a70fb7f2fb6cf599b441a8"
+    },
+    {
+      "fichier": "data/raw/README.md",
+      "etat": "ajouté",
+      "octets": 520,
+      "sha256": "7b2eede29acc1efc14c8788b4bd81cc5e3e56c8a27e9f21b1463777ee12927c0"
+    },
+    {
+      "fichier": "data/raw/scfp2022.parquet",
+      "etat": "conservé",
+      "octets": 3637186,
+      "sha256": "a9afff45d114938c5d26954db201c93e9ae74f20fd960cf2daac6820135fccc8"
+    },
+    {
+      "fichier": "data/raw/scfp2022s.zip",
+      "etat": "conservé",
+      "octets": 2869639,
+      "sha256": "3bb4d890ae2463ff6039ec7692e375f544dd98a55a37ca2cb2340354b9cc9d80"
+    },
+    {
+      "fichier": "evals/__init__.py",
+      "etat": "conservé",
+      "octets": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "fichier": "evals/cas.py",
+      "etat": "conservé",
+      "octets": 5340,
+      "sha256": "261641ef6fa5d0da4ec45e66abf30f68c158521cfce98777d819ef9f8141bf65"
+    },
+    {
+      "fichier": "evals/cas_generalisation.py",
+      "etat": "ajouté",
+      "octets": 1752,
+      "sha256": "89e3f26a25082e41a4900a2e84dd66ae1fe2d618421c8c4445a830a722a3e947"
+    },
+    {
+      "fichier": "evals/lancer.py",
+      "etat": "modifié",
+      "octets": 2318,
+      "sha256": "3e13b4886bfe32ea8c088d257a163c1ffc2d770506133fe95e2d3c6cfe2b6a47"
+    },
+    {
+      "fichier": "evals/parcours.py",
+      "etat": "ajouté",
+      "octets": 5559,
+      "sha256": "259e616d0aceae94d920a3017497d4d9ded09d2a5ab3291a7c8bd0490d70f01b"
+    },
+    {
+      "fichier": "examples/profil_complet.json",
+      "etat": "ajouté",
+      "octets": 254,
+      "sha256": "f8eb3447ad915cc6de615f513fad480c0cd2784a2c699331905a32e63a495ce7"
+    },
+    {
+      "fichier": "infer.py",
+      "etat": "ajouté",
+      "octets": 629,
+      "sha256": "998f43ce24b543d6f72d704e8774caa7ff27837d44769867bb203c0feb3bd53d"
+    },
+    {
+      "fichier": "lancer_local.py",
+      "etat": "ajouté",
+      "octets": 1136,
+      "sha256": "7e624b890e782b675c5ac487263582e250dda1405d02352549b8a4860fd757d1"
+    },
+    {
+      "fichier": "main.py",
+      "etat": "modifié",
+      "octets": 785,
+      "sha256": "6eda9383adb47c87d89b119bd31ae21680d5a17a5a6d1e5b85336aa1297043df"
+    },
+    {
+      "fichier": "models/kmeans.joblib",
+      "etat": "conservé",
+      "octets": 19203,
+      "sha256": "fe4cd44d437115d94c9853cff3795c65cc6f582ec1dbaa0518fc45cb0fe8720f"
+    },
+    {
+      "fichier": "models/noms_clusters.joblib",
+      "etat": "conservé",
+      "octets": 181,
+      "sha256": "6fc8c86e236619e6e77fb72db2701b11e0f1928fa0ea50c227a5e58cca9c9fe9"
+    },
+    {
+      "fichier": "models/scaler.joblib",
+      "etat": "conservé",
+      "octets": 967,
+      "sha256": "d2f49bc136918e1bce6bd6e180e8287c8fa978576539695dbe80a15190b5d335"
+    },
+    {
+      "fichier": "models/segmentation.joblib",
+      "etat": "ajouté",
+      "octets": 16383,
+      "sha256": "7af1e448377076f435f143ae7c9e0fef9bb5714017e07aca41f85b731d8fb7d9"
+    },
+    {
+      "fichier": "notebooks/eda_clustering.py",
+      "etat": "modifié",
+      "octets": 3327,
+      "sha256": "a4934fb8961af0c1241869408a343ecadfae49c9c469c7ae86e45d200935ad33"
+    },
+    {
+      "fichier": "reports/bilan_reprise.md",
+      "etat": "ajouté",
+      "octets": 20418,
+      "sha256": "b8251d1ce83512de4c76ae6eb1550007f889aedd97652dfdbe03766c82ce90d3"
+    },
+    {
+      "fichier": "reports/dependances_verification.txt",
+      "etat": "ajouté",
+      "octets": 30,
+      "sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09"
+    },
+    {
+      "fichier": "reports/eda.json",
+      "etat": "ajouté",
+      "octets": 2238,
+      "sha256": "67e736d4aa650fe8ba4bb8157bb990c64e6b4a4e41524758902c96f52956626c"
+    },
+    {
+      "fichier": "reports/entrainement.log",
+      "etat": "ajouté",
+      "octets": 1595,
+      "sha256": "a24f8245aa3f8b30c75fd39c0be27b512d94733c6d9da5e41aa6d2c58398b5c2"
+    },
+    {
+      "fichier": "reports/evaluation_classification.json",
+      "etat": "ajouté",
+      "octets": 14991,
+      "sha256": "d01f414adf29cefc9a2812798b514d4ed93d3356fc93a0245829701b1beb729e"
+    },
+    {
+      "fichier": "reports/evaluation_parcours.json",
+      "etat": "ajouté",
+      "octets": 20498,
+      "sha256": "c4f31cc445d4d95889aa038b286e127a99254ef971ee04cfa092d4dd345c869a"
+    },
+    {
+      "fichier": "reports/evolution_comparaison_scf.md",
+      "etat": "ajouté",
+      "octets": 4703,
+      "sha256": "c5ac986a6518b63fbfd00158ed110efc45ce552c7272faff1b066660ba8b10c8"
+    },
+    {
+      "fichier": "reports/exemple_inference.json",
+      "etat": "ajouté",
+      "octets": 1571,
+      "sha256": "208a7bc7e7c0a575cfd2896d73075343de68424d076c7e7e05c0d0628f589475"
+    },
+    {
+      "fichier": "reports/figures/eda_exploration.png",
+      "etat": "modifié",
+      "octets": 118107,
+      "sha256": "bba788367362c63d155d4c98d0f2905988b22641c4cafbcfba10798f26c05390"
+    },
+    {
+      "fichier": "reports/figures/silhouette_scores.png",
+      "etat": "modifié",
+      "octets": 30387,
+      "sha256": "550b926c14edf48a4dc535846d60c5def9e174d358bb3fa57020ed2af6007420"
+    },
+    {
+      "fichier": "reports/predictions_test.json",
+      "etat": "ajouté",
+      "octets": 190110,
+      "sha256": "df7197451907b1924ef25718b7e46310684314954099539d86f1a2c5f390c148"
+    },
+    {
+      "fichier": "reports/protocole_ml.json",
+      "etat": "ajouté",
+      "octets": 46801,
+      "sha256": "1ddb8c6d57af32103d63d9e52549c8db27c23427aee7c7a65564734da63db2d0"
+    },
+    {
+      "fichier": "reports/tests_comparaison_scf.log",
+      "etat": "ajouté",
+      "octets": 5852,
+      "sha256": "460a9d4523311adda834b97fe3c75520d0f0c82ef9bde27bd41d443f8b1d9819"
+    },
+    {
+      "fichier": "reports/tests_complets.log",
+      "etat": "ajouté",
+      "octets": 3866,
+      "sha256": "f51021fcd905cade6f18cc07d9f340fcf8369ec64f031974f1004b87e2439b30"
+    },
+    {
+      "fichier": "reports/tests_phase_interface.log",
+      "etat": "ajouté",
+      "octets": 2960,
+      "sha256": "683b688194efd0f8c1aa2b6be95fac32bf7217586dff2abb62e9f9163886c2c5"
+    },
+    {
+      "fichier": "reports/tests_phase_ml.log",
+      "etat": "ajouté",
+      "octets": 3324,
+      "sha256": "b1979192b0d85fbb0b0c1e0fa27facf982167a48d03a5e2670511e2150f0ab3c"
+    },
+    {
+      "fichier": "reports/tests_phase_redaction.log",
+      "etat": "ajouté",
+      "octets": 3762,
+      "sha256": "1136d5af42b15abb1434e312e522e97f87eacb41e3a7fabfa4510c7e7da0669f"
+    },
+    {
+      "fichier": "requirements-lock.txt",
+      "etat": "ajouté",
+      "octets": 1054,
+      "sha256": "6a58c0f0b5c1e38bd24aeb7c60104ed230dcc0a061604984d48e9c540b3ee11d"
+    },
+    {
+      "fichier": "requirements.txt",
+      "etat": "modifié",
+      "octets": 88,
+      "sha256": "5b8b0afcfbfec42cbe9c17733faaf8b199bcc0694488437afc143fea3449e625"
+    },
+    {
+      "fichier": "tests/test_comparaison_scf.py",
+      "etat": "ajouté",
+      "octets": 2814,
+      "sha256": "e9178c7519af2b2a5d7b6e99cc00c0f811b0af2ce846312f1304445a3add75eb"
+    },
+    {
+      "fichier": "tests/test_demarrage.py",
+      "etat": "ajouté",
+      "octets": 1767,
+      "sha256": "dc4c9acf81fdda0cd57bc89d982380bda113e80f200ad4d2f45c42d4262aa23e"
+    },
+    {
+      "fichier": "tests/test_interface.py",
+      "etat": "ajouté",
+      "octets": 5041,
+      "sha256": "6daf652f0479640175b59d8366d96b64ca6e5c8ea9cc29fc4f4e850f0e03f3a6"
+    },
+    {
+      "fichier": "tests/test_protocole_ml.py",
+      "etat": "ajouté",
+      "octets": 2304,
+      "sha256": "ccf9e40691f12aaca156f74afdb8661d949306b8162b56b20d1ddff758c5a515"
+    },
+    {
+      "fichier": "tests/test_redaction.py",
+      "etat": "ajouté",
+      "octets": 1401,
+      "sha256": "ea91cd28932c32769c698c0be8449a651b20ade8f01923f4cbbb13608923a848"
+    },
+    {
+      "fichier": "tests/test_v6.py",
+      "etat": "ajouté",
+      "octets": 5104,
+      "sha256": "10078c241690ec65251aa17d3039dc9d9a95d919a000bdf5668b5c0925ac553f"
+    }
+  ]
+}

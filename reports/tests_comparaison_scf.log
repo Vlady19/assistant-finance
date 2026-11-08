@@ -1,0 +1,56 @@
+test_conversion_euros_sans_confusion_unites (test_comparaison_scf.ComparaisonSCFTests.test_conversion_euros_sans_confusion_unites) ... ok
+test_denominateur_nul_et_non_fini (test_comparaison_scf.ComparaisonSCFTests.test_denominateur_nul_et_non_fini) ... ok
+test_graphiques_reperes_et_extreme_non_tronque (test_comparaison_scf.ComparaisonSCFTests.test_graphiques_reperes_et_extreme_non_tronque) ... /Users/dimitri/.matplotlib is not a writable directory
+Matplotlib created a temporary cache directory at /var/folders/g7/f36ys2sj0j7bqww78k9ftdmc0000gn/T/matplotlib-6_8mrn6x because there was an issue with the default path (/Users/dimitri/.matplotlib); it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
+Matplotlib is building the font cache; this may take a moment.
+ok
+test_incoherence_totaux (test_comparaison_scf.ComparaisonSCFTests.test_incoherence_totaux) ... ok
+test_rang_reference_independante_et_ex_aequo (test_comparaison_scf.ComparaisonSCFTests.test_rang_reference_independante_et_ex_aequo) ... ok
+test_reference_reelle_et_non_plafonnee (test_comparaison_scf.ComparaisonSCFTests.test_reference_reelle_et_non_plafonnee) ... ok
+test_zero_absence_actions_et_dettes (test_comparaison_scf.ComparaisonSCFTests.test_zero_absence_actions_et_dettes) ... ok
+test_api_absente (test_demarrage.DemarrageTests.test_api_absente) ... ok
+test_interface_sans_cle (test_demarrage.DemarrageTests.test_interface_sans_cle) ... 2026-09-29 11:58:28.121 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_reessai (test_demarrage.DemarrageTests.test_reessai) ... ok
+test_repli_api_redaction (test_demarrage.DemarrageTests.test_repli_api_redaction) ... ok
+test_validation_active (test_demarrage.DemarrageTests.test_validation_active) ... ok
+test_chat_complet_et_historique_sans_comparaison_automatique (test_interface.InterfaceTests.test_chat_complet_et_historique_sans_comparaison_automatique) ... 2026-09-29 11:58:28.370 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_comparaison_facultative_apres_analyse (test_interface.InterfaceTests.test_comparaison_facultative_apres_analyse) ... 2026-09-29 11:58:28.458 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_comparaison_invalide_efface_resultat_precedent (test_interface.InterfaceTests.test_comparaison_invalide_efface_resultat_precedent) ... 2026-09-29 11:58:28.543 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_erreur_api_sans_perte_profil (test_interface.InterfaceTests.test_erreur_api_sans_perte_profil) ... 2026-09-29 11:58:29.216 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_formulaire_euros_graphique_et_ml (test_interface.InterfaceTests.test_formulaire_euros_graphique_et_ml) ... 2026-09-29 11:58:29.288 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_formulaire_incomplet (test_interface.InterfaceTests.test_formulaire_incomplet) ... 2026-09-29 11:58:29.837 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_familles_separees_et_scaler_train_seul (test_protocole_ml.ProtocoleMLTests.test_familles_separees_et_scaler_train_seul) ... ok
+test_fichier_corrompu_annonce (test_protocole_ml.ProtocoleMLTests.test_fichier_corrompu_annonce) ... ok
+test_inference_reference_distance_euclidienne (test_protocole_ml.ProtocoleMLTests.test_inference_reference_distance_euclidienne) ... ok
+test_rejet_profil_extreme (test_protocole_ml.ProtocoleMLTests.test_rejet_profil_extreme) ... ok
+test_chiffres_confies_au_rendu_python (test_redaction.RedactionTests.test_chiffres_confies_au_rendu_python) ... ok
+test_chiffres_en_lettres (test_redaction.RedactionTests.test_chiffres_en_lettres) ... ok
+test_pas_de_causalite_scf_dans_redaction_regles (test_redaction.RedactionTests.test_pas_de_causalite_scf_dans_redaction_regles) ... ok
+test_pas_de_garantie_positive (test_redaction.RedactionTests.test_pas_de_garantie_positive) ... ok
+test_chemin_independant_cwd (test_v6.ClusteringTests.test_chemin_independant_cwd) ... ok
+test_fichier_absent_visible (test_v6.ClusteringTests.test_fichier_absent_visible) ... ok
+test_incomplet_pas_de_defaut (test_v6.ClusteringTests.test_incomplet_pas_de_defaut) ... ok
+test_modele_reel (test_v6.ClusteringTests.test_modele_reel) ... ok
+test_plafonnement_annonce (test_v6.ClusteringTests.test_plafonnement_annonce) ... ok
+test_tolerance_ne_modifie_pas_segment (test_v6.ClusteringTests.test_tolerance_ne_modifie_pas_segment) ... ok
+test_calcul_independant (test_v6.PipelineTests.test_calcul_independant) ... ok
+test_changement_sujet_pendant_collecte (test_v6.PipelineTests.test_changement_sujet_pendant_collecte) ... ok
+test_integration_ml_pas_juste_module (test_v6.PipelineTests.test_integration_ml_pas_juste_module) ... ok
+test_montants_visibles_meme_si_redaction_echoue (test_v6.PipelineTests.test_montants_visibles_meme_si_redaction_echoue) ... ok
+test_pas_actions_si_prerequis_absents (test_v6.PipelineTests.test_pas_actions_si_prerequis_absents) ... ok
+test_prix_indisponible (test_v6.PipelineTests.test_prix_indisponible) ... ok
+test_bornes_et_finitude (test_v6.ProfilTests.test_bornes_et_finitude) ... ok
+test_observations_optionnelles (test_v6.ProfilTests.test_observations_optionnelles) ... ok
+test_zero_conserve (test_v6.ProfilTests.test_zero_conserve) ... ok
+
+----------------------------------------------------------------------
+Ran 41 tests in 11.667s
+
+OK

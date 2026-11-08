@@ -1,0 +1,56 @@
+{
+  "outil": "app.pipeline.calculer",
+  "entrees": {
+    "montant_eur": 10000.0,
+    "horizon_annees": 15.0,
+    "tolerance_risque": "prudent",
+    "epargne_precaution_mois": 6.0,
+    "resident_francais": true,
+    "age": 62.0,
+    "part_actions_actuelle": 0.43,
+    "liquidites_mois_revenu": 2.7,
+    "ratio_dette_actifs": 0.09
+  },
+  "niveau_regles": "prudent",
+  "allocation_illustrative": [
+    {
+      "classe": "Fonds sécurisés (fonds euros, monétaire)",
+      "pourcentage": 75,
+      "montant_eur": 7500.0
+    },
+    {
+      "classe": "Actions diversifiées",
+      "pourcentage": 25,
+      "montant_eur": 2500.0
+    }
+  ],
+  "allocation_suspendue": false,
+  "alertes": [],
+  "clustering": {
+    "statut": "utilise",
+    "explication": "Segment obtenu par le pipeline SCF sauvegardé.",
+    "cluster": 1,
+    "distance": 0.012668955868630313,
+    "modele_sha256": "7af1e448377076f435f143ae7c9e0fef9bb5714017e07aca41f85b731d8fb7d9",
+    "entrees": {
+      "age": 62.0,
+      "part_risquee": 0.43,
+      "coussin_mois": 2.7,
+      "levier": 0.09
+    },
+    "moyennes_segment": {
+      "age": 61.979770366320395,
+      "part_risquee": 0.43266008798934985,
+      "coussin_mois": 2.720270113960237,
+      "levier": 0.08718775215040331
+    },
+    "avertissements": [
+      "SCF 2022 : ménages américains ; comparaison descriptive, non recommandation."
+    ]
+  },
+  "sources": {
+    "profil": "déclarations utilisateur",
+    "allocation": "règles pédagogiques explicites de app/regles.py",
+    "segmentation": "Federal Reserve, SCF 2022, premier implicat"
+  }
+}

@@ -1,0 +1,369 @@
+{
+  "date_utc": "2026-09-28T19:08:31.537517+00:00",
+  "modele": "gpt-5.6-luna",
+  "temperature": "paramètre omis ; configuration historique conservée, non-déterminisme possible",
+  "prompt_sha256": "355b2c14dafd754dcc2cae372bb4e90cd37d8d67c36a6b9fc9f03887a6cd9586",
+  "questions_litterales_dans_prompt": 0,
+  "resultats": [
+    {
+      "jeu": "historique",
+      "question": "J'ai 10000 € à placer sur 15 ans, plutôt prudent",
+      "attendu": "allocation",
+      "obtenu": "allocation",
+      "reussi": true,
+      "note": "cas canonique",
+      "justification": "La demande porte sur la répartition d’un capital selon une durée et un niveau de prudence, sans instrument financier nommé.",
+      "duree_s": 2.229
+    },
+    {
+      "jeu": "historique",
+      "question": "Je viens de toucher une prime de 5000 €, qu'est-ce que j'en fais ?",
+      "attendu": "allocation",
+      "obtenu": "allocation",
+      "reussi": true,
+      "note": "montant sans vocabulaire technique",
+      "justification": "La demande porte sur l'affectation générale d'un capital disponible, sans mention d'un instrument précis, d'une enveloppe fiscale ou d'un moment de marché.",
+      "duree_s": 2.079
+    },
+    {
+      "jeu": "historique",
+      "question": "Je peux mettre 300 € par mois de côté, comment les placer ?",
+      "attendu": "allocation",
+      "obtenu": "allocation",
+      "reussi": true,
+      "note": "versements réguliers",
+      "justification": "La demande porte sur une stratégie générale de répartition d’une capacité d’épargne, sans instrument nommé ni question fiscale ou de timing.",
+      "duree_s": 2.079
+    },
+    {
+      "jeu": "historique",
+      "question": "J'aimerais préparer ma retraite, j'ai 40 ans et 50000 € d'épargne",
+      "attendu": "allocation",
+      "obtenu": "allocation",
+      "reussi": true,
+      "note": "objectif long terme",
+      "justification": "La demande porte sur la préparation de la retraite et l’utilisation globale d’un capital, sans mention d’un instrument précis ni d’une question fiscale.",
+      "duree_s": 1.524
+    },
+    {
+      "jeu": "historique",
+      "question": "Les marchés sont au plus haut, je devrais attendre avant d'investir ?",
+      "attendu": "market_timing",
+      "obtenu": "market_timing",
+      "reussi": true,
+      "note": "timing explicite",
+      "justification": "La question porte principalement sur le moment opportun pour investir et sur l’éventualité d’attendre une baisse.",
+      "duree_s": 1.159
+    },
+    {
+      "jeu": "historique",
+      "question": "Je vends mes actions maintenant ou j'attends la fin de l'année ?",
+      "attendu": "market_timing",
+      "obtenu": "market_timing",
+      "reussi": true,
+      "note": "timing de sortie",
+      "justification": "La question porte explicitement sur le moment de vendre, avec une comparaison entre maintenant et une échéance future.",
+      "duree_s": 1.377
+    },
+    {
+      "jeu": "historique",
+      "question": "J'ai 20000 € à placer mais je me demande si c'est le bon moment",
+      "attendu": "market_timing",
+      "obtenu": "market_timing",
+      "reussi": true,
+      "note": "LIMITE : allocation + timing, le timing doit gagner",
+      "justification": "La question centrale porte sur le moment d’investir, et non sur la répartition du capital.",
+      "duree_s": 1.173
+    },
+    {
+      "jeu": "historique",
+      "question": "On est en fin de cycle non ? Vaut mieux rester liquide ?",
+      "attendu": "market_timing",
+      "obtenu": "market_timing",
+      "reussi": true,
+      "note": "LIMITE : jargon, pas de verbe d'achat",
+      "justification": "La question porte principalement sur le positionnement temporel et l’opportunité d’attendre avant d’investir.",
+      "duree_s": 1.431
+    },
+    {
+      "jeu": "historique",
+      "question": "Je passe mes SOL en ETH, c'est plus solide non ?",
+      "attendu": "actif_precis",
+      "obtenu": "actif_precis",
+      "reussi": true,
+      "note": "arbitrage entre deux tokens",
+      "justification": "La demande porte sur un arbitrage entre deux tokens précisément nommés (SOL et ETH), et non sur une allocation générale ou un simple timing de marché.",
+      "duree_s": 1.307
+    },
+    {
+      "jeu": "historique",
+      "question": "Ça vaut le coup d'acheter du Nvidia en ce moment ?",
+      "attendu": "actif_precis",
+      "obtenu": "actif_precis",
+      "reussi": true,
+      "note": "LIMITE : contient aussi du timing",
+      "justification": "La demande porte sur le choix d’un titre nommé, Nvidia ; la mention du moment n’en fait pas une question de market timing centrale.",
+      "duree_s": 1.646
+    },
+    {
+      "jeu": "historique",
+      "question": "Le S&P 500 ou le MSCI World pour mon PEA ?",
+      "attendu": "actif_precis",
+      "obtenu": "actif_precis",
+      "reussi": true,
+      "note": "LIMITE : indices, pas titres individuels",
+      "justification": "La demande porte sur l’arbitrage entre deux indices nommés dans une enveloppe déjà choisie.",
+      "duree_s": 1.147
+    },
+    {
+      "jeu": "historique",
+      "question": "PEA ou compte-titres pour investir en ETF ?",
+      "attendu": "fiscalite",
+      "obtenu": "fiscalite",
+      "reussi": true,
+      "note": "choix d'enveloppe",
+      "justification": "La question porte sur le choix d'une enveloppe d'investissement, donc sur ses conditions et sa fiscalité.",
+      "duree_s": 1.155
+    },
+    {
+      "jeu": "historique",
+      "question": "Comment sont imposées les plus-values sur crypto en France ?",
+      "attendu": "fiscalite",
+      "obtenu": "fiscalite",
+      "reussi": true,
+      "note": "imposition directe",
+      "justification": "La demande porte sur les règles d’imposition des gains en cryptomonnaies en France.",
+      "duree_s": 1.533
+    },
+    {
+      "jeu": "historique",
+      "question": "Si je retire de mon PEA après 6 ans, je paie quoi ?",
+      "attendu": "fiscalite",
+      "obtenu": "fiscalite",
+      "reussi": true,
+      "note": "antériorité fiscale",
+      "justification": "La demande porte sur l’imposition et les conséquences fiscales d’un retrait d’une enveloppe d’investissement.",
+      "duree_s": 1.639
+    },
+    {
+      "jeu": "historique",
+      "question": "L'assurance-vie c'est intéressant fiscalement ?",
+      "attendu": "fiscalite",
+      "obtenu": "fiscalite",
+      "reussi": true,
+      "note": "LIMITE : pourrait passer pour de la pédagogie",
+      "justification": "La question porte sur les avantages et les conditions fiscales d’une enveloppe d’épargne, sans demander une allocation ou le choix d’un actif.",
+      "duree_s": 1.446
+    },
+    {
+      "jeu": "historique",
+      "question": "C'est quoi la différence entre un ETF et un fonds classique ?",
+      "attendu": "pedagogie",
+      "obtenu": "pedagogie",
+      "reussi": true,
+      "note": "définition",
+      "justification": "La demande porte sur une comparaison descriptive entre deux types de fonds, sans demander lequel choisir ni formuler de recommandation personnelle.",
+      "duree_s": 1.41
+    },
+    {
+      "jeu": "historique",
+      "question": "Pourquoi on dit qu'il faut diversifier ?",
+      "attendu": "pedagogie",
+      "obtenu": "pedagogie",
+      "reussi": true,
+      "note": "principe général",
+      "justification": "La question demande une explication générale d’un principe d’investissement, sans solliciter de choix d’actifs ni de répartition personnalisée.",
+      "duree_s": 1.36
+    },
+    {
+      "jeu": "historique",
+      "question": "Ça marche comment les intérêts composés ?",
+      "attendu": "pedagogie",
+      "obtenu": "pedagogie",
+      "reussi": true,
+      "note": "mécanisme",
+      "justification": "La demande porte sur une explication générale d’un mécanisme financier, sans demander de choisir un placement ni de déterminer une allocation.",
+      "duree_s": 1.047
+    },
+    {
+      "jeu": "historique",
+      "question": "Je devrais prendre un prêt sur 20 ou 25 ans pour mon appart ?",
+      "attendu": "hors_sujet",
+      "obtenu": "hors_sujet",
+      "reussi": true,
+      "note": "crédit immobilier",
+      "justification": "La demande concerne un crédit immobilier, qui est explicitement hors du périmètre patrimonial couvert.",
+      "duree_s": 1.388
+    },
+    {
+      "jeu": "historique",
+      "question": "Mon assurance auto a augmenté, je change ?",
+      "attendu": "hors_sujet",
+      "obtenu": "hors_sujet",
+      "reussi": true,
+      "note": "assurance",
+      "justification": "La demande porte sur une assurance, qui est explicitement hors du périmètre patrimonial.",
+      "duree_s": 1.317
+    },
+    {
+      "jeu": "historique",
+      "question": "Je dois créer une SASU ou une EURL ?",
+      "attendu": "hors_sujet",
+      "obtenu": "hors_sujet",
+      "reussi": true,
+      "note": "LIMITE : fiscalité, mais professionnelle",
+      "justification": "La demande concerne le choix d’une forme juridique d’entreprise et relève d’un sujet professionnel, hors du périmètre patrimonial traité.",
+      "duree_s": 1.288
+    },
+    {
+      "jeu": "generalisation",
+      "question": "Nasdaq 100 ou Euro Stoxx 50 dans mon compte-titres ?",
+      "attendu": "actif_precis",
+      "obtenu": "actif_precis",
+      "reussi": true,
+      "note": "choix d'indices, autre enveloppe",
+      "justification": "La demande porte sur un arbitrage entre deux indices nommément désignés, même si l’enveloppe fiscale est déjà choisie.",
+      "duree_s": 1.502
+    },
+    {
+      "jeu": "generalisation",
+      "question": "Pour moi, je prends plutôt un ETF CAC 40 ou un fonds émergents ?",
+      "attendu": "actif_precis",
+      "obtenu": "actif_precis",
+      "reussi": true,
+      "note": "choix de fonds",
+      "justification": "La demande porte sur un choix entre deux instruments d’investissement nommés.",
+      "duree_s": 1.183
+    },
+    {
+      "jeu": "generalisation",
+      "question": "Bitcoin ou Ether pour mon épargne ?",
+      "attendu": "actif_precis",
+      "obtenu": "actif_precis",
+      "reussi": true,
+      "note": "choix elliptique de tokens",
+      "justification": "La demande porte sur un choix entre deux actifs nommément désignés.",
+      "duree_s": 1.209
+    },
+    {
+      "jeu": "generalisation",
+      "question": "Je remplace mon ETF Europe par un ETF Japon ?",
+      "attendu": "actif_precis",
+      "obtenu": "actif_precis",
+      "reussi": true,
+      "note": "arbitrage explicite",
+      "justification": "La demande porte sur un arbitrage entre deux instruments nommés, un ETF Europe et un ETF Japon.",
+      "duree_s": 1.061
+    },
+    {
+      "jeu": "generalisation",
+      "question": "Quelles différences de composition entre le Nasdaq 100 et le CAC 40 ?",
+      "attendu": "pedagogie",
+      "obtenu": "pedagogie",
+      "reussi": true,
+      "note": "comparaison descriptive",
+      "justification": "La demande porte sur une comparaison descriptive de deux indices nommés, sans demander lequel choisir ni obtenir de données chiffrées actuelles.",
+      "duree_s": 1.32
+    },
+    {
+      "jeu": "generalisation",
+      "question": "Explique-moi le rôle d'un indice boursier.",
+      "attendu": "pedagogie",
+      "obtenu": "pedagogie",
+      "reussi": true,
+      "note": "définition",
+      "justification": "La demande porte sur une explication descriptive d’un mécanisme financier, sans demander de choisir un instrument ni de prendre une décision d’investissement.",
+      "duree_s": 1.106
+    },
+    {
+      "jeu": "generalisation",
+      "question": "Sur quelle enveloppe détenir mes ETF, un PEA ou un CTO ?",
+      "attendu": "fiscalite",
+      "obtenu": "fiscalite",
+      "reussi": true,
+      "note": "choix réel de l'enveloppe",
+      "justification": "La question porte sur le choix d’une enveloppe d’investissement et ses conditions fiscales, non sur la sélection d’un ETF précis.",
+      "duree_s": 1.819
+    },
+    {
+      "jeu": "generalisation",
+      "question": "Est-ce que les retraits de mon assurance-vie sont imposés ?",
+      "attendu": "fiscalite",
+      "obtenu": "fiscalite",
+      "reussi": true,
+      "note": "fiscalité",
+      "justification": "La question porte sur l’imposition des retraits et les règles fiscales de l’assurance-vie.",
+      "duree_s": 2.021
+    },
+    {
+      "jeu": "generalisation",
+      "question": "J'ai une somme disponible, comment la partager entre actions et liquidités ?",
+      "attendu": "allocation",
+      "obtenu": "allocation",
+      "reussi": true,
+      "note": "répartition générale",
+      "justification": "La demande porte sur la répartition d'un capital entre deux grandes classes d'actifs, sans mentionner d'instruments précis.",
+      "duree_s": 2.431
+    },
+    {
+      "jeu": "generalisation",
+      "question": "Je souhaite organiser 18000 euros pour dans douze ans.",
+      "attendu": "allocation",
+      "obtenu": "allocation",
+      "reussi": true,
+      "note": "objectif patrimonial",
+      "justification": "La demande porte sur l’organisation d’un capital selon un horizon temporel, ce qui relève de l’allocation patrimoniale.",
+      "duree_s": 1.407
+    },
+    {
+      "jeu": "generalisation",
+      "question": "Dois-je attendre la prochaine correction avant de placer mon argent ?",
+      "attendu": "market_timing",
+      "obtenu": "market_timing",
+      "reussi": true,
+      "note": "timing explicite",
+      "justification": "La question porte directement sur le moment d’entrée et l’opportunité d’attendre une baisse du marché.",
+      "duree_s": 1.68
+    },
+    {
+      "jeu": "generalisation",
+      "question": "Combien vaut l'action Apple aujourd'hui ?",
+      "attendu": "donnees_marche",
+      "obtenu": "donnees_marche",
+      "reussi": true,
+      "note": "donnée absente",
+      "justification": "La demande porte sur un cours de marché chiffré et actuel.",
+      "duree_s": 1.126
+    },
+    {
+      "jeu": "generalisation",
+      "question": "Quelle performance a réalisé mon ETF en août 2026 ?",
+      "attendu": "donnees_marche",
+      "obtenu": "donnees_marche",
+      "reussi": true,
+      "note": "mesure historique indisponible",
+      "justification": "La demande porte sur une performance de marché chiffrée pour une période datée.",
+      "duree_s": 1.356
+    },
+    {
+      "jeu": "generalisation",
+      "question": "Quel statut juridique pour facturer mes clients ?",
+      "attendu": "hors_sujet",
+      "obtenu": "hors_sujet",
+      "reussi": true,
+      "note": "professionnel",
+      "justification": "La demande porte sur le choix d’un statut juridique professionnel, et non sur l’épargne ou la gestion patrimoniale personnelle.",
+      "duree_s": 1.958
+    }
+  ],
+  "scores": {
+    "historique": {
+      "reussis": 21,
+      "total": 21
+    },
+    "generalisation": {
+      "reussis": 14,
+      "total": 14
+    }
+  }
+}

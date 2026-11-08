@@ -1,0 +1,455 @@
+{
+  "modele": "gpt-5.6-luna",
+  "total": 12,
+  "reussis": 12,
+  "cas": [
+    {
+      "type": "extraction",
+      "question": "Je veux investir 12000 euros sur 10 ans, prudent, résident fiscal français, avec 6 mois de dépenses en réserve.",
+      "attendu": {
+        "montant_eur": 12000.0,
+        "horizon_annees": 10.0,
+        "tolerance_risque": "prudent",
+        "epargne_precaution_mois": 6.0,
+        "resident_francais": true,
+        "age": null,
+        "part_actions_actuelle": null,
+        "liquidites_mois_revenu": null,
+        "ratio_dette_actifs": null
+      },
+      "obtenu": {
+        "montant_eur": 12000.0,
+        "horizon_annees": 10.0,
+        "tolerance_risque": "prudent",
+        "epargne_precaution_mois": 6.0,
+        "resident_francais": true,
+        "age": null,
+        "part_actions_actuelle": null,
+        "liquidites_mois_revenu": null,
+        "ratio_dette_actifs": null
+      },
+      "reussi": true
+    },
+    {
+      "type": "extraction",
+      "question": "J'ai 62 ans. Mes actions représentent actuellement 43 % de mon patrimoine financier. Mes liquidités représentent 2,7 mois de revenu habituel. Mes dettes valent 9 % de mes actifs. Je suis prudent.",
+      "attendu": {
+        "age": 62.0,
+        "part_actions_actuelle": 0.43,
+        "liquidites_mois_revenu": 2.7,
+        "ratio_dette_actifs": 0.09,
+        "epargne_precaution_mois": null,
+        "tolerance_risque": "prudent"
+      },
+      "obtenu": {
+        "montant_eur": null,
+        "horizon_annees": null,
+        "tolerance_risque": "prudent",
+        "epargne_precaution_mois": null,
+        "resident_francais": null,
+        "age": 62.0,
+        "part_actions_actuelle": 0.43,
+        "liquidites_mois_revenu": 2.7,
+        "ratio_dette_actifs": 0.09
+      },
+      "reussi": true
+    },
+    {
+      "type": "extraction",
+      "question": "Je suis dynamique, je dispose de 6 mois de dépenses d'avance.",
+      "attendu": {
+        "age": null,
+        "ratio_dette_actifs": null,
+        "part_actions_actuelle": null,
+        "liquidites_mois_revenu": null,
+        "epargne_precaution_mois": 6.0
+      },
+      "obtenu": {
+        "montant_eur": null,
+        "horizon_annees": null,
+        "tolerance_risque": "dynamique",
+        "epargne_precaution_mois": 6.0,
+        "resident_francais": null,
+        "age": null,
+        "part_actions_actuelle": null,
+        "liquidites_mois_revenu": null,
+        "ratio_dette_actifs": null
+      },
+      "reussi": true
+    },
+    {
+      "type": "extraction",
+      "question": "J'aimerais placer de l'argent à long terme.",
+      "attendu": {
+        "montant_eur": null,
+        "horizon_annees": null,
+        "resident_francais": null
+      },
+      "obtenu": {
+        "montant_eur": null,
+        "horizon_annees": null,
+        "tolerance_risque": null,
+        "epargne_precaution_mois": null,
+        "resident_francais": null,
+        "age": null,
+        "part_actions_actuelle": null,
+        "liquidites_mois_revenu": null,
+        "ratio_dette_actifs": null
+      },
+      "reussi": true
+    },
+    {
+      "type": "extraction",
+      "question": "Je peux épargner 300 euros chaque mois.",
+      "attendu": {
+        "montant_eur": null
+      },
+      "obtenu": {
+        "montant_eur": null,
+        "horizon_annees": null,
+        "tolerance_risque": null,
+        "epargne_precaution_mois": null,
+        "resident_francais": null,
+        "age": null,
+        "part_actions_actuelle": null,
+        "liquidites_mois_revenu": null,
+        "ratio_dette_actifs": null
+      },
+      "reussi": true
+    },
+    {
+      "type": "parcours",
+      "question": "Je veux placer 10000 euros sur 15 ans, prudent, résident fiscal français, 6 mois de dépenses en réserve. J'ai 62 ans, 43 % de mon patrimoine financier actuellement en actions, des liquidités couvrant 2,7 mois de revenu habituel et un ratio dettes sur actifs de 9 %.",
+      "attendu": {
+        "intent": "allocation",
+        "termine": true,
+        "clustering": "utilise"
+      },
+      "obtenu": {
+        "intent": "allocation",
+        "termine": true,
+        "texte": "La règle appliquée retient le niveau le plus prudent entre la tolérance déclarée et la capacité évaluée. Ici, la capacité est dynamique, mais le niveau retenu reste prudent, car la tolérance déclarée est prudente : il s’agit d’une conséquence de la règle, et non d’un refus. La capacité repose uniquement sur l’horizon et le niveau de précaution disponible ; cette méthode ne prend donc pas en compte d’autres éléments personnels ou financiers. Les informations de marché et les données fiscales à jour ne sont pas disponibles, et aucune allocation précise n’est fournie dans le dossier. Ces éléments sont informatifs et ne constituent pas un conseil en investissement.",
+        "dossier": "**Résultats calculés par Python**\n\nCapital déclaré : 10 000,00 €. Horizon : 15 ans.\n\nPrécaution : 6 mois de dépenses.\n\nNiveau retenu par les règles : prudent.\n\nIllustration pédagogique issue de règles fixes, pas d'une optimisation financière :\n\n- Fonds sécurisés (fonds euros, monétaire) : 75 % — 7 500,00 €\n\n- Actions diversifiées : 25 % — 2 500,00 €\n\n\n**Comparaison aux ménages SCF**\n\nSegment obtenu par le pipeline SCF sauvegardé.\n\nSegment 1 ; distance standardisée : 0.013 (ce n'est pas une probabilité).\n\nMoyennes du segment après plafonnement : âge 62.0 ans ; actions 43.3 % ; liquidités 2.7 mois de revenu ; dette/actifs 8.7%.\n\nSCF 2022 : ménages américains ; comparaison descriptive, non recommandation.\n\nAucun prix, rendement attendu ou indicateur de marché n'a été calculé.",
+        "trace": {
+          "outil": "app.pipeline.calculer",
+          "entrees": {
+            "montant_eur": 10000.0,
+            "horizon_annees": 15.0,
+            "tolerance_risque": "prudent",
+            "epargne_precaution_mois": 6.0,
+            "resident_francais": true,
+            "age": 62.0,
+            "part_actions_actuelle": 0.43,
+            "liquidites_mois_revenu": 2.7,
+            "ratio_dette_actifs": 0.09
+          },
+          "niveau_regles": "prudent",
+          "allocation_illustrative": [
+            {
+              "classe": "Fonds sécurisés (fonds euros, monétaire)",
+              "pourcentage": 75,
+              "montant_eur": 7500.0
+            },
+            {
+              "classe": "Actions diversifiées",
+              "pourcentage": 25,
+              "montant_eur": 2500.0
+            }
+          ],
+          "allocation_suspendue": false,
+          "alertes": [],
+          "clustering": {
+            "statut": "utilise",
+            "explication": "Segment obtenu par le pipeline SCF sauvegardé.",
+            "cluster": 1,
+            "distance": 0.012668955868630313,
+            "modele_sha256": "7af1e448377076f435f143ae7c9e0fef9bb5714017e07aca41f85b731d8fb7d9",
+            "entrees": {
+              "age": 62.0,
+              "part_risquee": 0.43,
+              "coussin_mois": 2.7,
+              "levier": 0.09
+            },
+            "moyennes_segment": {
+              "age": 61.979770366320395,
+              "part_risquee": 0.43266008798934985,
+              "coussin_mois": 2.720270113960237,
+              "levier": 0.08718775215040331
+            },
+            "avertissements": [
+              "SCF 2022 : ménages américains ; comparaison descriptive, non recommandation."
+            ]
+          },
+          "sources": {
+            "profil": "déclarations utilisateur",
+            "allocation": "règles pédagogiques explicites de app/regles.py",
+            "segmentation": "Federal Reserve, SCF 2022, premier implicat"
+          }
+        },
+        "repli": false,
+        "validation": null,
+        "duree_s": 11.69
+      },
+      "reussi": true
+    },
+    {
+      "type": "parcours",
+      "question": "J'ai 10000 euros à investir, sur un an, dynamique, résident fiscal français, sans épargne de précaution.",
+      "attendu": {
+        "intent": "allocation",
+        "termine": true,
+        "clustering": "informations_manquantes"
+      },
+      "obtenu": {
+        "intent": "allocation",
+        "termine": true,
+        "texte": "La règle retenue consiste à prendre le niveau le plus prudent entre la tolérance déclarée et la capacité déterminée par l’horizon et la précaution disponible. Ainsi, malgré une tolérance déclarée dynamique, le niveau retenu est prudent : cet écart découle de l’application de cette règle à la situation décrite, et non d’un refus. L’allocation est suspendue, car le dossier ne permet pas de présenter une répartition. Les informations de marché et les éléments fiscaux à jour ne sont pas disponibles ici. Ces éléments sont informatifs et ne constituent pas un conseil en investissement.",
+        "dossier": "**Résultats calculés par Python**\n\nCapital déclaré : 10 000,00 €. Horizon : 1 ans.\n\nPrécaution : 0 mois de dépenses.\n\nNiveau retenu par les règles : prudent.\n\nIllustration d'allocation suspendue : horizon trop court ou épargne de précaution insuffisante selon les règles du projet.\n\n\nAvant d'investir, l'usage est de sécuriser 3 à 6 mois de dépenses sur des livrets disponibles. Sans ce coussin, une baisse de marché vous forcerait à vendre au pire moment.\n\n\nSur moins de deux ans, une exposition aux actions relève du pari plus que de l'investissement.\n\n\nLe niveau de risque souhaité dépasse ce que votre horizon et votre épargne de précaution permettent. La répartition proposée retient le niveau le plus prudent des deux.\n\n\n**Comparaison aux ménages SCF**\n\nComparaison SCF non calculée. Observations à fournir : age, part_actions_actuelle, liquidites_mois_revenu, ratio_dette_actifs\n\nAucun prix, rendement attendu ou indicateur de marché n'a été calculé.",
+        "trace": {
+          "outil": "app.pipeline.calculer",
+          "entrees": {
+            "montant_eur": 10000.0,
+            "horizon_annees": 1.0,
+            "tolerance_risque": "dynamique",
+            "epargne_precaution_mois": 0.0,
+            "resident_francais": true,
+            "age": null,
+            "part_actions_actuelle": null,
+            "liquidites_mois_revenu": null,
+            "ratio_dette_actifs": null
+          },
+          "niveau_regles": "prudent",
+          "allocation_illustrative": [],
+          "allocation_suspendue": true,
+          "alertes": [
+            "Avant d'investir, l'usage est de sécuriser 3 à 6 mois de dépenses sur des livrets disponibles. Sans ce coussin, une baisse de marché vous forcerait à vendre au pire moment.",
+            "Sur moins de deux ans, une exposition aux actions relève du pari plus que de l'investissement.",
+            "Le niveau de risque souhaité dépasse ce que votre horizon et votre épargne de précaution permettent. La répartition proposée retient le niveau le plus prudent des deux."
+          ],
+          "clustering": {
+            "statut": "informations_manquantes",
+            "explication": "Comparaison SCF non calculée. Observations à fournir : age, part_actions_actuelle, liquidites_mois_revenu, ratio_dette_actifs",
+            "cluster": null,
+            "distance": null,
+            "modele_sha256": null,
+            "entrees": {},
+            "moyennes_segment": {},
+            "avertissements": []
+          },
+          "sources": {
+            "profil": "déclarations utilisateur",
+            "allocation": "règles pédagogiques explicites de app/regles.py",
+            "segmentation": "Federal Reserve, SCF 2022, premier implicat"
+          }
+        },
+        "repli": false,
+        "validation": null,
+        "duree_s": 9.33
+      },
+      "reussi": true
+    },
+    {
+      "type": "parcours",
+      "question": "Le S&P 500 ou le MSCI World pour mon PEA ?",
+      "attendu": {
+        "intent": "actif_precis",
+        "termine": false,
+        "clustering": null
+      },
+      "obtenu": {
+        "intent": "actif_precis",
+        "termine": false,
+        "texte": "Il s’agit d’un choix d’instruments, et non d’un moment d’entrée. Le premier indice est concentré sur les grandes entreprises américaines, tandis que le second couvre un ensemble plus large de marchés développés, avec une diversification géographique accrue mais sans couvrir tous les marchés mondiaux. Dans un PEA, l’éligibilité dépend de l’ETF précis et de sa structure ; je ne dispose pas de données à jour sur ce point, ni sur les frais, la fiscalité ou les performances. Votre objectif, votre horizon et la diversification recherchée aideraient à comparer ces options. Ces éléments sont informatifs et ne constituent pas un conseil en investissement.",
+        "dossier": "",
+        "trace": {
+          "classification": "actif_precis",
+          "source": "connaissances générales du LLM, sans données de marché"
+        },
+        "repli": false,
+        "validation": null,
+        "duree_s": 8.0
+      },
+      "reussi": true
+    },
+    {
+      "type": "parcours",
+      "question": "Explique le principe de diversification.",
+      "attendu": {
+        "intent": "pedagogie",
+        "termine": false,
+        "clustering": null
+      },
+      "obtenu": {
+        "intent": "pedagogie",
+        "termine": false,
+        "texte": "La diversification consiste à répartir l’épargne entre des placements dont les évolutions ne sont pas identiques, afin de ne pas dépendre d’un seul actif, secteur, zone géographique ou émetteur. Elle peut réduire l’impact d’un événement défavorable, sans supprimer le risque de perte ni garantir un rendement. Elle doit tenir compte de l’horizon de placement, de la disponibilité souhaitée de l’épargne et de la capacité à supporter les fluctuations. Ces éléments sont informatifs et ne constituent pas un conseil en investissement.",
+        "dossier": "",
+        "trace": {
+          "classification": "pedagogie",
+          "source": "connaissances générales du LLM, sans données de marché"
+        },
+        "repli": false,
+        "validation": null,
+        "duree_s": 4.4
+      },
+      "reussi": true
+    },
+    {
+      "type": "parcours",
+      "question": "Donne le cours actuel de Microsoft.",
+      "attendu": {
+        "intent": "donnees_marche",
+        "termine": false,
+        "clustering": null
+      },
+      "obtenu": {
+        "intent": "donnees_marche",
+        "termine": false,
+        "texte": "Je n'ai pas de source de cours ou de performances de marché connectée. Je ne peux donc pas donner ou vérifier cette valeur. Ces éléments sont informatifs et ne constituent pas un conseil en investissement.",
+        "dossier": "",
+        "trace": {
+          "source_marche": "indisponible",
+          "classification": "donnees_marche"
+        },
+        "repli": false,
+        "validation": null,
+        "duree_s": 1.5
+      },
+      "reussi": true
+    },
+    {
+      "type": "parcours",
+      "question": "Je veux écrire un bail commercial.",
+      "attendu": {
+        "intent": "hors_sujet",
+        "termine": false,
+        "clustering": null
+      },
+      "obtenu": {
+        "intent": "hors_sujet",
+        "termine": false,
+        "texte": "Cette demande sort du périmètre de cet assistant consacré au placement de l'épargne. Vous pouvez me poser une question sur la diversification ou décrire votre épargne. Ces éléments sont informatifs et ne constituent pas un conseil en investissement.",
+        "dossier": "",
+        "trace": {},
+        "repli": false,
+        "validation": null,
+        "duree_s": 1.26
+      },
+      "reussi": true
+    },
+    {
+      "type": "dialogue",
+      "obtenu": [
+        {
+          "message": "Je veux placer 10000 euros.",
+          "texte": "Avez-vous une épargne disponible à côté ? Combien de mois de dépenses couvre-t-elle environ ?",
+          "intent": "allocation",
+          "profil": {
+            "montant_eur": 10000.0,
+            "horizon_annees": null,
+            "tolerance_risque": null,
+            "epargne_precaution_mois": null,
+            "resident_francais": null,
+            "age": null,
+            "part_actions_actuelle": null,
+            "liquidites_mois_revenu": null,
+            "ratio_dette_actifs": null
+          },
+          "termine": false
+        },
+        {
+          "message": "J'ai 6 mois de dépenses d'avance.",
+          "texte": "Dans combien d'années aurez-vous besoin de cet argent ?",
+          "intent": "allocation",
+          "profil": {
+            "montant_eur": 10000.0,
+            "horizon_annees": null,
+            "tolerance_risque": null,
+            "epargne_precaution_mois": 6.0,
+            "resident_francais": null,
+            "age": null,
+            "part_actions_actuelle": null,
+            "liquidites_mois_revenu": null,
+            "ratio_dette_actifs": null
+          },
+          "termine": false
+        },
+        {
+          "message": "Que signifie diversifier ?",
+          "texte": "Diversifier consiste à répartir son épargne entre différentes catégories de placements, secteurs, zones géographiques ou supports, afin de ne pas dépendre d’un seul risque. Si un placement évolue défavorablement, les autres peuvent parfois amortir son impact, sans garantir l’absence de perte. La diversification doit rester cohérente avec vos objectifs, votre horizon et votre capacité à accepter les fluctuations. Ces éléments sont informatifs et ne constituent pas un conseil en investissement.",
+          "intent": "pedagogie",
+          "profil": {
+            "montant_eur": 10000.0,
+            "horizon_annees": null,
+            "tolerance_risque": null,
+            "epargne_precaution_mois": 6.0,
+            "resident_francais": null,
+            "age": null,
+            "part_actions_actuelle": null,
+            "liquidites_mois_revenu": null,
+            "ratio_dette_actifs": null
+          },
+          "termine": false
+        },
+        {
+          "message": "Sur 15 ans.",
+          "texte": "Si votre investissement perdait 20 % en quelques mois, que feriez-vous ?\n\nA. Je vendrais pour limiter mes pertes\n\nB. Je conserverais mon investissement en attendant une éventuelle remontée\n\nC. Je pourrais investir davantage pour profiter de la baisse",
+          "intent": "allocation",
+          "profil": {
+            "montant_eur": 10000.0,
+            "horizon_annees": 15.0,
+            "tolerance_risque": null,
+            "epargne_precaution_mois": 6.0,
+            "resident_francais": null,
+            "age": null,
+            "part_actions_actuelle": null,
+            "liquidites_mois_revenu": null,
+            "ratio_dette_actifs": null
+          },
+          "termine": false
+        },
+        {
+          "message": "A",
+          "texte": "Résidez-vous fiscalement en France ?",
+          "intent": "allocation",
+          "profil": {
+            "montant_eur": 10000.0,
+            "horizon_annees": 15.0,
+            "tolerance_risque": "prudent",
+            "epargne_precaution_mois": 6.0,
+            "resident_francais": null,
+            "age": null,
+            "part_actions_actuelle": null,
+            "liquidites_mois_revenu": null,
+            "ratio_dette_actifs": null
+          },
+          "termine": false
+        },
+        {
+          "message": "Oui",
+          "texte": "La règle retenue consiste à retenir le niveau le plus prudent entre la tolérance déclarée et la capacité déterminée par l’horizon et la réserve de précaution. Ici, la tolérance déclarée est prudente, tandis que la capacité est dynamique : le niveau retenu reste donc prudent, comme conséquence de cette règle, et non comme un refus. Cette méthode ne constitue pas une allocation et ne permet pas d’apprécier les conditions de marché, la fiscalité ou d’autres éléments qui ne figurent pas dans le dossier. Ces éléments sont informatifs et ne constituent pas un conseil en investissement.",
+          "intent": "allocation",
+          "profil": {
+            "montant_eur": 10000.0,
+            "horizon_annees": 15.0,
+            "tolerance_risque": "prudent",
+            "epargne_precaution_mois": 6.0,
+            "resident_francais": true,
+            "age": null,
+            "part_actions_actuelle": null,
+            "liquidites_mois_revenu": null,
+            "ratio_dette_actifs": null
+          },
+          "termine": true
+        }
+      ],
+      "attendu": {
+        "montant_eur": 10000,
+        "horizon_annees": 15,
+        "tolerance_risque": "prudent",
+        "resident_francais": true
+      },
+      "reussi": true
+    }
+  ]
+}

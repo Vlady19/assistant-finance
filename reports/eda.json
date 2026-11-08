@@ -1,0 +1,59 @@
+{
+  "source": "https://www.federalreserve.gov/econres/scfindex.htm",
+  "qualite": {
+    "familles_initiales": 4595,
+    "familles_retenues": 4532,
+    "familles_exclues": 63,
+    "fin_nul": 52,
+    "revenu_nul": 11
+  },
+  "dictionnaire": {
+    "age": "Âge de la personne de référence, années.",
+    "part_risquee": "equity / fin : actions directes et indirectes / patrimoine financier ; pas une tolérance déclarée.",
+    "coussin_mois": "12 × liq / norminc : liquidités / revenu mensuel habituel ; pas des mois de dépenses.",
+    "levier": "levratio : dettes / actifs totaux.",
+    "y1": "Identifie l'implicat ; premier retenu via y1 modulo 10 = 1 ; jamais une feature.",
+    "yy1": "Identifiant famille, utilisé pour contrôler la séparation train/test ; jamais une feature.",
+    "wgt": "Poids d'enquête, utilisé pour une comparaison descriptive de sensibilité, pas pour entraîner KMeans.",
+    "educ": "Non utilisé dans le ML. La modalité -1 signifie moins d'une première année de scolarité, pas une valeur manquante."
+  },
+  "variables_modele": [
+    "age",
+    "part_risquee",
+    "coussin_mois",
+    "levier"
+  ],
+  "limites": [
+    "Un seul implicat ; incertitude d'imputation non estimée.",
+    "KMeans non pondéré ; sensibilité descriptive aux poids seulement, pas inférence d'enquête complète.",
+    "Population américaine, aucune validation externe française.",
+    "Liquidités / revenu et non mois de dépenses.",
+    "Distance de rejet : seuil heuristique, non probabilité de fiabilité."
+  ],
+  "correlations": {
+    "age": {
+      "age": 1.0,
+      "part_risquee": 0.12954781703399032,
+      "coussin_mois": 0.04592775896640652,
+      "levier": -0.0016275304045451037
+    },
+    "part_risquee": {
+      "age": 0.12954781703399032,
+      "part_risquee": 1.0,
+      "coussin_mois": 0.006180107521307783,
+      "levier": -0.0196164352299304
+    },
+    "coussin_mois": {
+      "age": 0.04592775896640652,
+      "part_risquee": 0.006180107521307783,
+      "coussin_mois": 1.0,
+      "levier": -0.0027042243121208095
+    },
+    "levier": {
+      "age": -0.0016275304045451037,
+      "part_risquee": -0.0196164352299304,
+      "coussin_mois": -0.0027042243121208095,
+      "levier": 1.0
+    }
+  }
+}
