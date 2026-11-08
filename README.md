@@ -1,135 +1,517 @@
-# Assistant finance — reprise V6
+# Assistant Finance
 
-Projet de fin de formation Datagong, poursuivant le travail réalisé avec Claude. Le chatbot comprend une demande en français, collecte un profil, applique des règles Python explicites et compare, si les observations sont disponibles, ce profil aux ménages du SCF 2022.
+Assistant pédagogique d’investissement développé dans le cadre de ma formation **AI Engineer chez Datagong**.
 
-Le LLM sert à comprendre le langage et à expliquer les règles. Python calcule les chiffres et utilise le modèle de clustering. La comparaison statistique ne prescrit pas une allocation optimale. Aucun cours, performance ou signal boursier en direct n'est disponible.
+Le projet combine **LLM, règles métier Python et Machine Learning** pour analyser un profil d’épargnant, produire une allocation pédagogique et, de manière facultative, comparer certaines caractéristiques du profil à l’enquête américaine **Survey of Consumer Finances (SCF) 2022**.
 
-## Démarrer
+L’objectif principal du projet est de séparer clairement les responsabilités :
 
-Environnement validé : Python **3.14.4**, macOS Apple Silicon. Les versions exactes figurent dans `requirements-lock.txt`. Une installation dans un environnement neuf a été effectuée. D'autres systèmes restent à tester.
+- le **LLM** comprend le langage naturel et formule les explications ;
+- **Python** valide les données, applique les règles et réalise tous les calculs numériques ;
+- un modèle **K-Means** fournit une comparaison descriptive avec les profils observés dans le SCF ;
+- des garde-fous contrôlent les réponses avant leur affichage.
+
+> Ce projet est pédagogique. Il ne constitue pas un conseil financier personnalisé et ne fournit ni cours de marché en temps réel, ni prévision de rendement, ni signal de trading.
+
+---
+
+## Fonctionnalités principales
+
+### Assistant conversationnel
+
+L'utilisateur peut décrire sa situation en français.
+
+Le système :
+
+1. identifie l'intention de la demande ;
+2. extrait les informations structurées du profil ;
+3. valide et mémorise les informations déjà connues ;
+4. demande uniquement les informations encore nécessaires ;
+5. applique les règles Python ;
+6. génère une explication qualitative contrôlée.
+
+Le profil principal comprend notamment :
+
+- le capital à investir ;
+- l'horizon d'investissement ;
+- la tolérance au risque déclarée ;
+- l'épargne de précaution ;
+- la résidence fiscale.
+
+---
+
+### Allocation pédagogique
+
+Les allocations sont calculées par des **règles Python déterministes**.
+
+Le LLM ne choisit donc pas lui-même les pourcentages.
+
+Le projet distingue également :
+
+- la **préférence de risque** déclarée par l'utilisateur ;
+- sa **capacité à prendre du risque**, déterminée à partir de sa situation.
+
+Si certaines conditions minimales ne sont pas respectées, notamment un horizon trop court ou une épargne de précaution insuffisante, l'affichage d'une allocation est suspendu.
+
+---
+
+### Comparaison facultative avec le SCF 2022
+
+Après l'analyse principale, l'utilisateur peut choisir :
+
+> **Oui, voir où je me situe**
+
+Cette étape est totalement facultative.
+
+Un formulaire séparé demande :
+
+- l'âge ;
+- l'épargne totale ;
+- le montant investi en actions ;
+- les liquidités disponibles ;
+- le revenu mensuel ;
+- la valeur totale des actifs ;
+- les dettes.
+
+Ces montants sont transformés en quatre variables comparables au SCF :
+
+| Variable | Calcul / signification |
+|---|---|
+| Âge | âge renseigné |
+| Part en actions | actions / patrimoine financier |
+| Liquidités en mois de revenu | liquidités / revenu mensuel |
+| Ratio dette / actifs | dettes / valeur totale des actifs |
+
+Les graphiques situent ensuite l'utilisateur par rapport aux **4 532 ménages exploitables** de l'échantillon utilisé.
+
+Cette comparaison est uniquement **descriptive** : elle ne détermine pas l'allocation d'investissement et ne définit pas ce qu'un utilisateur devrait faire.
+
+---
+
+## Architecture
+
+```mermaid
+flowchart LR
+    U[Utilisateur] --> I[Classification de l'intention]
+    I --> E[Extraction structurée du profil]
+    E --> P[Validation Pydantic]
+    P --> M[Mémoire structurée]
+    M --> R[Règles et calculs Python]
+
+    R --> L[Rédaction qualitative LLM]
+    L --> V[Validation de la réponse]
+    V --> A[Affichage]
+
+    F[Formulaire SCF facultatif] --> C[Validation et calcul des ratios]
+    C --> K[Scaler + K-Means]
+    C --> H[Comparaison statistique]
+    K --> A
+    H --> A
+```
+
+L'orchestration principale se trouve dans :
+
+```text
+app/pipeline.py
+```
+
+Le même pipeline métier est utilisé par l'interface Streamlit et les autres points d'entrée du projet.
+
+---
+
+## Séparation LLM / Python
+
+Un choix important du projet consiste à ne pas confier les calculs financiers au LLM.
+
+### Le LLM est utilisé pour
+
+- classifier la demande ;
+- extraire les informations exprimées en langage naturel ;
+- produire une explication qualitative.
+
+### Python est utilisé pour
+
+- valider les données ;
+- mémoriser le profil ;
+- calculer les allocations ;
+- appliquer les seuils métier ;
+- calculer les ratios SCF ;
+- exécuter le clustering ;
+- afficher les valeurs numériques finales.
+
+Cette séparation permet de limiter les risques d'hallucination sur les chiffres.
+
+---
+
+## Profil structuré et validation
+
+Les données utilisateur sont représentées avec **Pydantic**.
+
+Les valeurs absentes restent explicitement représentées par `None`.
+
+Une valeur égale à zéro reste au contraire une information connue :
+
+```text
+0    = valeur connue et nulle
+None = information inconnue
+```
+
+Cette distinction est importante pour des données telles que les dettes ou la part actuellement investie en actions.
+
+---
+
+## Machine Learning
+
+Le projet utilise un modèle **K-Means** construit à partir du **Survey of Consumer Finances 2022** de la Federal Reserve.
+
+Les quatre variables utilisées sont :
+
+```text
+âge
+part en actions
+liquidités / revenu mensuel
+dettes / actifs
+```
+
+Le pipeline ML contient notamment :
+
+```text
+bornage des variables
+        ↓
+StandardScaler
+        ↓
+K-Means
+```
+
+Le modèle utilisé par l'application est enregistré dans :
+
+```text
+models/segmentation.joblib
+```
+
+Il contient le pipeline complet ainsi qu'un seuil permettant de détecter les profils trop éloignés des données d'entraînement.
+
+Dans ce cas, le système peut retourner :
+
+```text
+hors_distribution
+```
+
+plutôt que de forcer artificiellement l'utilisateur dans un cluster.
+
+---
+
+## Protocole d'entraînement
+
+Les familles du SCF sont séparées entre **train** et **test**.
+
+Le `StandardScaler` est ajusté uniquement sur les données d'entraînement afin d'éviter une fuite de données.
+
+Plusieurs nombres de clusters ont été étudiés :
+
+```text
+K = 2
+K = 3
+K = 4
+```
+
+Le modèle à **3 clusters** a été conservé afin de privilégier la continuité du projet et la lisibilité de l'interprétation.
+
+Le modèle à quatre clusters obtenait cependant une meilleure silhouette sur les configurations comparées. Ce choix est donc un compromis méthodologique et non l'affirmation que `K=3` constitue mathématiquement l'unique solution optimale.
+
+La stabilité du clustering est également contrôlée sur plusieurs initialisations.
+
+---
+
+## Interface
+
+L'application principale utilise **Streamlit**.
+
+Elle propose deux parcours complémentaires :
+
+### Formulaire principal
+
+Permet de renseigner directement :
+
+- le capital ;
+- l'horizon ;
+- l'épargne de précaution ;
+- la tolérance au risque ;
+- la résidence fiscale.
+
+### Chat
+
+Permet de fournir les mêmes informations progressivement en langage naturel.
+
+Les informations déjà connues sont conservées dans une mémoire structurée afin d'éviter de redemander inutilement les mêmes données.
+
+---
+
+## Technologies utilisées
+
+```text
+Python
+Streamlit
+Pydantic
+OpenAI API
+pandas
+NumPy
+scikit-learn
+Matplotlib
+joblib
+unittest
+```
+
+---
+
+## Installation
+
+### 1. Cloner le dépôt
+
+```bash
+git clone https://github.com/Vlady19/assistant-finance.git
+cd assistant-finance
+```
+
+### 2. Créer l'environnement Python
+
+L'environnement de référence utilisé pour le projet est **Python 3.14.4 sur macOS Apple Silicon**.
 
 ```bash
 python3.14 -m venv .venv
 source .venv/bin/activate
+```
+
+### 3. Installer les dépendances
+
+```bash
 python -m pip install -r requirements.txt
+```
+
+Les versions utilisées lors de la validation du projet sont également conservées dans :
+
+```text
+requirements-lock.txt
+```
+
+### 4. Configurer la clé OpenAI
+
+Créer un fichier `.env` à partir de :
+
+```text
+.env.example
+```
+
+puis définir :
+
+```text
+OPENAI_API_KEY=...
+```
+
+Le fichier `.env` est exclu du dépôt Git et ne doit jamais être versionné.
+
+Le modèle OpenAI peut être configuré avec :
+
+```text
+OPENAI_MODEL
+```
+
+Un changement de modèle nécessite idéalement de rejouer les évaluations du projet.
+
+---
+
+## Lancement
+
+La méthode principale est :
+
+```bash
 python lancer_local.py
 ```
 
-Le formulaire « Renseigner ou corriger ma situation » fonctionne sans API. Le chat utilise `OPENAI_API_KEY`, depuis l'environnement ou un `.env` local conforme à `.env.example`. Pour réutiliser une configuration conservée ailleurs sans copier la clé :
+Le formulaire principal peut fonctionner sans appel API.
+
+Les fonctionnalités conversationnelles nécessitent une clé OpenAI valide.
+
+Il est également possible d'utiliser une configuration `.env` située ailleurs :
 
 ```bash
 python lancer_local.py --env-file /chemin/vers/votre/.env
 ```
 
-La clé ne doit jamais être ajoutée au dépôt, aux captures ou à une archive. Le programme écoute uniquement sur la machine locale. `OPENAI_MODEL` permet de modifier le modèle ; le modèle déjà utilisé dans le projet (`gpt-5.6-luna`) a été conservé et testé. Le choix d'un autre modèle impose de rejouer les évaluations.
+---
 
-## Comprendre l'architecture
+## Tests
 
-```mermaid
-flowchart LR
-    U[Message utilisateur] --> I[Classification LLM]
-    I --> P[Extraction structurée du profil]
-    P --> V[Validation Pydantic et mémoire du profil]
-    V --> R[Règles et calculs Python]
-    F[Formulaire SCF facultatif en euros] --> C[Validation et ratios Python]
-    C --> M[Pipeline SCF : bornes, scaler, KMeans]
-    C --> H[Distributions et position descriptive]
-    H --> A
-    R --> L[Explication qualitative LLM contrôlée]
-    R --> A[Affichage des résultats Python]
-    M --> A
-    L --> A
-```
-
-L'orchestrateur est `app/pipeline.py`, commun au terminal et à Streamlit. Les chemins pédagogie, fiscalité, choix d'actifs, timing, données de marché et hors périmètre ont des politiques distinctes. Pendant une collecte, une nouvelle question peut interrompre le formulaire sans perdre le profil.
-
-Le projet reste dans `app/`, comme l'existant : ajouter un dossier `src/` et plusieurs agents n'améliorerait pas sa compréhension. Le code calculé montré par l'interface est la fonction réellement appelée ; ce n'est pas une chaîne de pensée du LLM.
-
-## Comparaison facultative, après l'analyse
-
-Après « Analyser mon épargne », l'application propose « Oui, voir où je me situe » ou « Pas maintenant ». Aucun clustering n'est lancé par Streamlit avant cette étape volontaire.
-
-Le formulaire séparé demande l'âge et des **montants en euros** : épargne totale, part en actions, argent disponible, revenus mensuels avant impôt, valeur totale des biens et dettes restantes. Les aides distinguent les dettes des mensualités et les revenus des dépenses. Python calcule les ratios ; aucune conversion euros/dollars n'est nécessaire.
-
-Quatre histogrammes présentent la position « Vous » et la médiane de l'échantillon : âge, part de l'épargne en actions, liquidités en mois de revenu et dette/biens. Les graphiques décrivent les 4 532 ménages exploitables, non pondérés, du premier implicat SCF 2022. Ce ne sont ni des classements de qualité ni des objectifs à atteindre. Les détails méthodologiques sont repliés, et le graphique peut être téléchargé.
-
-Cette saisie reste locale et séparée de la mémoire envoyée au LLM. Le modèle de clustering existant est toujours utilisé après validation du formulaire ; son éventuelle abstention n'empêche pas de montrer la distribution descriptive.
-
-La logique Python historique reste compatible : `calculer`, `analyser_profil` et `traiter` acceptent `inclure_comparaison=False`, utilisé par Streamlit. Leurs appels directs conservent le comportement V6 par défaut. Voir `reports/evolution_comparaison_scf.md` et `reports/tests_comparaison_scf.log` pour cette évolution de l'interface.
-
-## Ce que signifie le clustering
-
-Les cinq informations de base sont le capital ponctuel, l'horizon, la tolérance déclarée, l'épargne en mois de **dépenses** et la résidence fiscale. Quatre observations facultatives sont définies dans le même `Profil` :
-
-| Champ | Sens | Jamais remplacé par |
-|---|---|---|
-| `age` | Âge explicitement renseigné | Un âge moyen arbitraire |
-| `part_actions_actuelle` | Actions directes/indirectes divisées par le patrimoine financier | La tolérance ou une allocation souhaitée |
-| `liquidites_mois_revenu` | Liquidités divisées par le revenu mensuel habituel | Les mois de dépenses |
-| `ratio_dette_actifs` | Dettes divisées par la valeur totale des actifs | Zéro faute d'information |
-
-La part d’actions est comprise entre zéro et un ; le ratio dette/actifs peut dépasser un, et les mois de revenu sont une durée positive ou nulle. Le formulaire accepte des montants en euros et calcule ces ratios. Le modèle applique les plafonds documentés de l'EDA ; leur utilisation est signalée.
-
-`models/segmentation.joblib` contient le pipeline complet et son seuil de distance. Chaque résultat donne son empreinte SHA-256, les entrées, le segment et la distance. Les statuts `informations_manquantes`, `modele_indisponible` et `hors_distribution` sont visibles. Il n'existe pas de table de secours qui imiterait une prédiction ML.
-
-Les trois fichiers historiques `kmeans.joblib`, `scaler.joblib`, `noms_clusters.joblib` restent des archives de l'EDA de Claude ; **ils ne sont plus chargés par l'application**. Les anciens noms « prudent/équilibré/dynamique » des clusters ne sont pas interprétés comme des diagnostics psychologiques.
-
-## Reproduire les données et le ML
-
-La copie livrée contient déjà les données et le modèle nécessaires au lancement. Le script de préparation des données est fourni, mais sa reconstruction de bout en bout reste à vérifier ; voir le bilan de livraison.
-
-```bash
-python -m app.preparer_donnees
-python -m app.entrainement
-python -m notebooks.eda_clustering
-python infer.py examples/profil_complet.json
-```
-
-L'entraînement retient le premier implicat du SCF et exclut les ratios indéfinis. Les familles train et test sont disjointes ; le scaler est ajusté sur train uniquement. Les trois configurations KMeans sont comparées sur train. Le modèle à trois groupes est conservé pour la continuité et la lisibilité, malgré la meilleure silhouette de quatre groupes. La silhouette test, la stabilité selon plusieurs graines et les prédictions test sont enregistrées dans `reports/`.
-
-Les poids d'enquête sont utilisés pour une sensibilité descriptive, pas pour entraîner KMeans. Un seul implicat est utilisé : le modèle ne constitue pas une analyse complète du plan d'enquête. Les conclusions ne sont pas automatiquement transférables aux épargnants français.
-
-## Tester
-
-Tests locaux, sans coût API :
+Les tests locaux peuvent être exécutés sans coût API :
 
 ```bash
 python -m unittest discover -s tests -v
 python -m pip check
 ```
 
-Évaluations avec de vrais appels API, utilisant exclusivement des scénarios fictifs :
+Ils couvrent notamment :
+
+- les modèles Pydantic ;
+- la mémoire du profil ;
+- les règles d'allocation ;
+- le clustering ;
+- la séparation train/test ;
+- le calcul indépendant des distances K-Means ;
+- les profils hors distribution ;
+- la gestion d'un modèle ML indisponible ;
+- les garde-fous de rédaction ;
+- l'interface Streamlit ;
+- la comparaison SCF ;
+- les scénarios de panne API.
+
+---
+
+## Évaluations LLM
+
+Deux évaluations utilisent de vrais appels API :
 
 ```bash
 python -m evals.lancer
 python -m evals.parcours
 ```
 
-Les résultats sont conservés dans `reports/evaluation_classification.json` et `reports/evaluation_parcours.json`. La classification historique et le jeu complémentaire sont distingués. Les références d'extraction sont définies à la main, les montants attendus le sont indépendamment de l'agent, et la distance KMeans est revérifiée par une formule NumPy indépendante.
+Elles couvrent notamment :
 
-Ces scores ne sont pas un taux de fiabilité universel du chatbot. Les tests historiques sont des régressions connues ; le jeu complémentaire devient lui aussi une régression après inspection. Le paramètre de température est omis pour conserver la configuration API existante. Les réponses peuvent varier ; un protocole multi-runs indépendant reste à réaliser.
+- la classification des intentions ;
+- l'extraction structurée ;
+- les parcours utilisateur complets ;
+- la conservation du profil entre plusieurs messages.
 
-## Fichiers à lire pour préparer la soutenance
+Les résultats sont enregistrés dans :
 
-1. `app/models.py` : contrat des données, valeurs absentes et contraintes.
-2. `app/conversation.py` : mémoire et corrections de profil.
-3. `app/regles.py` : seuils et répartitions pédagogiques, distincts du ML.
-4. `app/features.py`, `app/clustering.py`, `app/entrainement.py` : séparation entraînement/inférence.
-5. `app/pipeline.py` : orchestration et résultats traçables.
-6. `app/validation.py` : limites des contrôles de rédaction.
-7. `reports/bilan_reprise.md` : corrections, résultats et priorités Datagong.
+```text
+reports/evaluation_classification.json
+reports/evaluation_parcours.json
+```
 
-## Limites à expliquer honnêtement
+Ces évaluations constituent des tests de régression du projet et ne doivent pas être interprétées comme un taux universel de fiabilité du chatbot.
 
-- Les allocations restent des exemples de règles fixes, pas des recommandations optimisées ou validées par SCF. Si l'horizon est inférieur à deux ans ou la précaution inférieure à trois mois, leur affichage est suspendu selon les règles du projet.
-- L'information fiscale générale peut vieillir ; il n'y a pas de base réglementaire à jour ni de moteur fiscal.
-- Les contrôles lexicaux de la rédaction ne prouvent pas la vérité de toutes les phrases. Les valeurs chiffrées et résultats ML sont affichés séparément par Python.
-- La mémoire structurée conserve le profil, pas une compréhension complète des références à toutes les réponses antérieures. Le bouton « Recommencer » efface l'état ; le formulaire séparé permet de corriger les observations facultatives ; « Masquer la comparaison » permet de quitter cette étape.
-- Pas de trading, de flux boursiers, d'analyse complète de portefeuille ou de calcul de performance sans données.
-- Pas d'agent LangChain ni d'exécution de code Python généré. L'outil métier est une fonction Python contrôlée ; l'équivalence avec la consigne Datagong doit être discutée explicitement.
+---
+
+## Structure du projet
+
+```text
+assistant-finance/
+│
+├── app/
+│   ├── clustering.py
+│   ├── comparaison_scf.py
+│   ├── config.py
+│   ├── conversation.py
+│   ├── entrainement.py
+│   ├── features.py
+│   ├── intents.py
+│   ├── llm.py
+│   ├── models.py
+│   ├── pipeline.py
+│   ├── preparer_donnees.py
+│   ├── redaction.py
+│   ├── regles.py
+│   ├── validation.py
+│   └── vue_comparaison.py
+│
+├── data/
+├── evals/
+├── examples/
+├── models/
+├── notebooks/
+├── reports/
+├── tests/
+│
+├── app_streamlit.py
+├── infer.py
+├── lancer_local.py
+├── main.py
+├── requirements.txt
+└── README.md
+```
+
+---
+
+## Reproductibilité des données
+
+Le dépôt ne versionne pas directement les données brutes du SCF.
+
+Le script de préparation est disponible :
+
+```bash
+python -m app.preparer_donnees
+```
+
+L'entraînement peut ensuite être exécuté avec :
+
+```bash
+python -m app.entrainement
+```
+
+L'EDA peut être rejouée avec :
+
+```bash
+python -m notebooks.eda_clustering
+```
+
+Une inférence peut également être testée à partir d'un profil d'exemple :
+
+```bash
+python infer.py examples/profil_complet.json
+```
+
+---
+
+## Limites du projet
+
+Ce projet reste volontairement limité à un cadre pédagogique.
+
+Les principales limites sont les suivantes :
+
+- les allocations reposent sur des règles fixes et ne constituent pas une optimisation de portefeuille ;
+- le SCF décrit des ménages américains et ses résultats ne sont pas directement transposables à tous les épargnants français ;
+- un seul implicat du SCF est utilisé pour le clustering ;
+- les distributions affichées sont descriptives et ne définissent pas un comportement financier optimal ;
+- aucune donnée boursière ou performance de marché en temps réel n'est utilisée ;
+- aucune prévision de rendement ou de prix n'est produite ;
+- les informations fiscales générales peuvent évoluer et le projet ne contient pas de moteur réglementaire ;
+- les contrôles appliqués aux réponses du LLM réduisent certains risques mais ne constituent pas une preuve formelle de vérité de chaque phrase générée ;
+- la mémoire conversationnelle conserve principalement les informations structurées du profil et non l'intégralité du raisonnement conversationnel ;
+- le projet n'exécute pas de code Python généré dynamiquement par le LLM : les outils métier sont des fonctions Python prédéfinies et contrôlées.
+
+---
+
+## Ce que ce projet met en œuvre
+
+Ce projet m'a permis de travailler sur l'ensemble d'une petite application IA, depuis les données jusqu'à l'interface :
+
+```text
+traitement de données
+        ↓
+Machine Learning
+        ↓
+API LLM
+        ↓
+sorties structurées
+        ↓
+règles métier
+        ↓
+validation et garde-fous
+        ↓
+tests
+        ↓
+interface Streamlit
+```
+
+L'objectif n'était pas uniquement de produire un chatbot, mais de construire une architecture dans laquelle **le langage naturel, les calculs déterministes et le Machine Learning ont des responsabilités clairement séparées**.
+
+---
 
 ## Sources
 
-- [SCF — Federal Reserve](https://www.federalreserve.gov/econres/scfindex.htm), [documentation méthodologique](https://www.federalreserve.gov/econres/scf-documentation.htm).
-- [Définitions des agrégats SCF](https://www.federalreserve.gov/econres/files/bulletin.macro.txt) et [dictionnaire SDA](https://sda.berkeley.edu/sdaweb/docs/scfcomb2022/DOC/hcbk0001.htm).
-- [OpenAI — sorties structurées et refus](https://developers.openai.com/api/docs/guides/structured-outputs). Une sortie conforme au schéma doit toujours être contrôlée sur le fond.
+- [Survey of Consumer Finances — Federal Reserve](https://www.federalreserve.gov/econres/scfindex.htm)
+- [SCF — documentation méthodologique](https://www.federalreserve.gov/econres/scf-documentation.htm)
+- [Définitions des agrégats SCF](https://www.federalreserve.gov/econres/files/bulletin.macro.txt)
+- [SCF 2022 — dictionnaire SDA](https://sda.berkeley.edu/sdaweb/docs/scfcomb2022/DOC/hcbk0001.htm)
+- [OpenAI — Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs)
