@@ -1,2 +1,2 @@
-# Environnement complet verrouillé, testé sur Python 3.14.4.
+# Installe les dépendances aux versions fixées dans requirements-lock.txt.
 -r requirements-lock.txt

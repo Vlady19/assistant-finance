@@ -1,8 +1,7 @@
-"""Contrôles locaux de la rédaction. Les chiffres affichés proviennent de Python.
-
-Un contrôle lexical n'est pas une preuve de vérité sémantique. Nous réduisons
-son périmètre : le LLM explique sans nombres ; les résultats sont rendus séparément.
+"""Contrôle la rédaction : nombres, garanties, prédictions et mention informative.
+Fournit le texte de secours ; ces contrôles lexicaux ne vérifient pas tous les faits.
 """
+
 import re
 import unicodedata
 from dataclasses import dataclass, field
@@ -23,6 +22,7 @@ def _normaliser(texte):
 def valider(reponse: str, dossier: str = "") -> Resultat:
     # Le dossier n'autorise pas à réemployer un montant comme un rendement.
     # Aucun chiffre n'est confié à la prose libre, même s'il existe dans le dossier.
+    """Détecte les nombres et formulations interdites, puis vérifie la mention informative."""
     if not isinstance(reponse, str) or not reponse.strip():
         return Resultat(False, ["réponse vide"])
     texte = _normaliser(reponse)
@@ -46,6 +46,7 @@ def valider(reponse: str, dossier: str = "") -> Resultat:
     return Resultat(not problemes, problemes)
 
 def rendu_de_secours(dossier: str) -> str:
+    """Fournit un texte fixe lorsque l'explication ne peut pas être validée."""
     if not dossier or dossier == "(sans objet)":
         return "Je ne peux pas fournir une explication vérifiée pour cette demande. Reformulez votre question. " + MENTION
     return "Les résultats calculés sont présentés ci-dessous. L'explication automatique est indisponible. " + MENTION

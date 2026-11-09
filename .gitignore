@@ -1,3 +1,4 @@
+# Exclut les secrets, environnements locaux, caches et données brutes du dépôt.
 .venv/
 .env
 .env.*

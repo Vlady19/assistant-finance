@@ -1,10 +1,7 @@
-"""Lance Streamlit avec une clé déjà conservée dans un .env externe si souhaité.
-
-python lancer_local.py --env-file /chemin/vers/.env
-Le secret est chargé en mémoire, pas copié dans les livrables.
-Sans argument : .env local ou variable OPENAI_API_KEY ; le calcul local reste
-accessible même sans clé.
+"""Démarre Streamlit sur la machine locale avec un port configurable.
+L'option --env-file charge une configuration externe sans copier la clé API.
 """
+
 import argparse
 import subprocess
 import sys
@@ -12,6 +9,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 def main():
+    """Charge la configuration facultative et démarre le serveur Streamlit local."""
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--env-file',type=Path)
     parser.add_argument('--port',type=int,default=8501)

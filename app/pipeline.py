@@ -1,8 +1,7 @@
-"""Orchestration V6 : langage → profil → calculs Python → explication contrôlée.
-
-Les fonctions métier restent indépendantes de l'interface et du fournisseur.
-La trace expose des entrées et résultats vérifiables, pas un raisonnement caché.
+"""Coordonne le parcours entre compréhension du message, profil et règles Python.
+Produit les résultats traçables, puis contrôle la rédaction et les réponses de secours.
 """
+
 from dataclasses import dataclass, field
 import json
 from openai import OpenAIError
@@ -14,6 +13,7 @@ from .config import ServiceIndisponible
 
 @dataclass
 class Reponse:
+    """Résultat d'un tour de conversation : texte, profil, calculs, statut et erreurs de contrôle."""
     texte: str
     profil: Profil
     derniere_question: str | None
@@ -27,6 +27,7 @@ class Reponse:
 
 
 def traiter(message: str, profil: Profil, derniere_question: str | None = None, *, inclure_comparaison: bool = True) -> Reponse:
+    """Classe la demande puis dirige le message vers la collecte, l'explication ou le refus."""
     if not message.strip() or len(message) > 12000:
         return Reponse("Écrivez une demande non vide, de longueur raisonnable.", profil,
                        derniere_question, intents.Intent.PEDAGOGIE, intents.Politique.EXPLIQUER)
@@ -65,6 +66,7 @@ def traiter(message: str, profil: Profil, derniere_question: str | None = None, 
 
 
 def _rediger_et_valider(politique, dossier, message):
+    """Contrôle au plus deux rédactions, puis fournit un texte de secours si nécessaire."""
     problemes = []
     for _ in range(2):
         correction = message if not problemes else message + "\nContrôle précédent : " + "; ".join(problemes)
@@ -80,6 +82,7 @@ def _rediger_et_valider(politique, dossier, message):
 
 
 def _analyser(message, profil, derniere_question, intent, politique, inclure_comparaison):
+    """Extrait et fusionne les informations avant de demander les champs manquants ou de calculer."""
     nouveau = extraire_profil(message, conversation.resume_lisible(profil), derniere_question)
     profil = conversation.fusionner(profil, nouveau)
     if profil.montant_eur == 0:
@@ -115,7 +118,9 @@ def _euros(montant):
 
 
 def calculer(profil: Profil, *, inclure_comparaison: bool = True) -> dict:
-    """Outil Python typé, borné et testable. Pas de code généré ni d'appel réseau."""
+    """Applique les règles et produit la trace des calculs, avec comparaison SCF facultative.
+    Cette fonction ne fait aucun appel au LLM ni au réseau.
+    """
     if not conversation.est_complet(profil):
         raise ValueError("Profil incomplet : collecte nécessaire avant les calculs.")
     niveau = regles.niveau_retenu(profil)
@@ -136,6 +141,7 @@ def calculer(profil: Profil, *, inclure_comparaison: bool = True) -> dict:
 
 
 def dossier_depuis_trace(trace: dict, *, inclure_comparaison: bool = True) -> str:
+    """Met en forme les résultats Python déjà calculés, sans ajouter de données financières."""
     profil = trace["entrees"]
     lignes = ["**Résultats calculés par Python**",
               f"Capital déclaré : {_euros(profil['montant_eur'])}. Horizon : {profil['horizon_annees']:g} ans.",
@@ -167,7 +173,7 @@ def _construire_dossier(profil):
 
 
 def analyser_profil(profil: Profil, message: str = "Expliquer le résultat", avec_llm: bool = False, *, inclure_comparaison: bool = True) -> Reponse:
-    """Même outil pour le chat et le formulaire local, donc mêmes contrôles."""
+    """Analyse un profil complet et ajoute une explication LLM seulement si elle est demandée."""
     if profil.montant_eur == 0:
         return Reponse(
             "Vous n'avez actuellement aucun capital à investir. "

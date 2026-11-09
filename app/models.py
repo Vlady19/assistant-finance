@@ -1,27 +1,7 @@
+"""Définit le profil Pydantic commun au chat, aux formulaires et à l'inférence.
+Valide les valeurs saisies et fournit les questions de collecte des informations principales.
 """
-app/models.py — le formulaire que le modèle doit remplir.
 
-# Sert à décrire la structure des données que l'on souhaite extraire du message de l'utilisateur, 
-# et à valider la réponse du modèle.
-
-=============================================================================
- LE CONCEPT NOUVEAU DE LA V2 : LA SORTIE STRUCTURÉE
-=============================================================================
-
-En V1, tu recevais du texte. Du texte, un programme ne peut rien en faire :
-impossible de calculer avec, de le stocker en base, de le tester.
-
-Ici, on inverse. On décrit à l'avance la forme exacte de ce qu'on veut, et
-le modèle est *contraint* de la respecter. Pas « il essaie de respecter » :
-contraint, techniquement, au moment de la génération.
-
-Une classe Pydantic sert à deux choses en même temps :
-  1. elle est traduite en JSON Schema et envoyée au modèle comme gabarit
-  2. elle valide et convertit la réponse reçue en objet Python utilisable
-
-C'est le même objet qui fait le contrat et la vérification. C'est pour ça
-que Pydantic est partout dans les projets d'IA générative.
-"""
 
 from typing import Literal
 
@@ -29,14 +9,9 @@ from pydantic import BaseModel, Field, ConfigDict
 
 
 class Profil(BaseModel):
-    """Contrat commun au chat, au formulaire et à l'inférence.
-
-    Les cinq champs historiques sont requis mais peuvent valoir None.
-    Les quatre observations SCF sont facultatives lors d'un appel Python,
-    pour préserver les profils V5. Le SDK convertit ce modèle en schéma
-    strict pour l'API : même ces champs sont alors présents, quitte à être null.
-    La sortie structurée garantit un format, pas la véracité de l'extraction.
-    Pydantic vérifie ensuite bornes, finitude et valeurs autorisées.
+    """Données communes au chat, au formulaire et à l'inférence.
+    Les cinq champs principaux sont requis mais acceptent None. Les observations
+    SCF sont facultatives. Les contraintes portent sur les bornes et les valeurs finies.
     """
 
     model_config = ConfigDict(extra="forbid", allow_inf_nan=False)
@@ -96,9 +71,8 @@ class Profil(BaseModel):
         )
     )
 
-    # V6 : observations facultatives pour comparer aux ménages SCF.
-    # Elles ne sont PAS déduites de la tolérance, ni des mois de dépenses.
-    # Le SDK rend ces propriétés requises/nullables dans le schéma envoyé.
+    # Observations SCF distinctes du risque déclaré et des mois de dépenses.
+    # Le schéma API accepte null quand ces observations ne sont pas connues.
     age: float | None = Field(default=None, ge=18, le=120,
         description="Âge explicitement donné en années ; null si absent. Ne jamais inventer 40 ans.")
     part_actions_actuelle: float | None = Field(default=None, ge=0, le=1,
@@ -109,8 +83,7 @@ class Profil(BaseModel):
         description="Dette totale divisée par la valeur totale des actifs, ratio explicite (pas dette/revenu). 0 uniquement si aucune dette explicitement déclarée. null sinon.")
 
 
-# Le nom lisible de chaque champ, pour l'affichage. On garde ça ici, à côté
-# du schéma, pour ne pas avoir à chercher ailleurs quand on ajoute un champ.
+# Questions de collecte des cinq informations principales, associées aux champs du profil.
 QUESTIONS = {
     "montant_eur": "Quel montant souhaitez-vous investir ?",
     "horizon_annees": "Dans combien d'années aurez-vous besoin de cet argent ?",

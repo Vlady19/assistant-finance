@@ -1,8 +1,7 @@
-"""Pont V6 : les observations réelles entrent dans le modèle sauvegardé.
-
-Un segment décrit des ménages ressemblants ; il ne mesure pas l'appétence au
-risque et ne prescrit aucune allocation. Aucun remplacement silencieux du ML.
+"""Compare un profil au pipeline K-Means enregistré et calcule sa distance.
+Signale les observations manquantes, le modèle indisponible et les profils trop éloignés.
 """
+
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 import hashlib
@@ -18,6 +17,7 @@ CHAMPS = ["age", "part_actions_actuelle", "liquidites_mois_revenu", "ratio_dette
 
 @dataclass
 class ResultatClustering:
+    """Statut de comparaison, groupe éventuel, distance et informations de traçabilité."""
     statut: str
     explication: str
     cluster: int | None = None
@@ -30,6 +30,9 @@ class ResultatClustering:
         return asdict(self)
 
 def comparer(profil: Profil, chemin: Path | None = None) -> ResultatClustering:
+    """Charge le pipeline, attribue un groupe et contrôle le seuil de distance.
+    Renvoie un statut explicite si les données ou le modèle ne permettent pas la comparaison.
+    """
     manquants = [c for c in CHAMPS if getattr(profil, c) is None]
     if manquants:
         return ResultatClustering("informations_manquantes",
@@ -45,6 +48,7 @@ def comparer(profil: Profil, chemin: Path | None = None) -> ResultatClustering:
         entrees = dict(zip(VARIABLES, [getattr(profil, c) for c in CHAMPS]))
         X = pd.DataFrame([entrees], columns=VARIABLES)
         cluster = int(modele.predict(X)[0])  # vrai appel KMeans, pas une table de secours
+        # La distance est mesurée après bornage et standardisation du profil.
         distance = float(modele.transform(X)[0, cluster])
         centres = modele.named_steps["scaler"].inverse_transform(modele.named_steps["kmeans"].cluster_centers_)
         moyennes = dict(zip(VARIABLES, map(float, centres[cluster])))
@@ -52,6 +56,7 @@ def comparer(profil: Profil, chemin: Path | None = None) -> ResultatClustering:
         avertissements = ["SCF 2022 : ménages américains ; comparaison descriptive, non recommandation."]
         if profil.liquidites_mois_revenu > 24 or profil.ratio_dette_actifs > 1:
             avertissements.append("Valeurs extrêmes plafonnées comme à l'entraînement : liquidités à 24, dette/actifs à 1.")
+        # Au-delà du seuil appris sur train, l'attribution est écartée sans groupe de secours.
         if seuil is not None and distance > seuil:
             return ResultatClustering("hors_distribution", "Profil éloigné des observations d'entraînement : attribution non retenue.",
                 distance=distance, modele_sha256=hashlib.sha256(contenu).hexdigest(), entrees=entrees, avertissements=avertissements)

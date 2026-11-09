@@ -1,4 +1,7 @@
-"""Évaluation API réelle, résultats persistés. Lancer : python -m evals.lancer."""
+"""Évalue la classification des deux jeux de cas avec de vrais appels API.
+Enregistre les réponses, les scores et les durées dans reports/evaluation_classification.json.
+"""
+
 import hashlib
 import json
 import time
@@ -12,6 +15,7 @@ from evals.cas_generalisation import CAS as NOUVEAUX
 
 
 def lancer():
+    """Exécute les cas de classification et sauvegarde les résultats par jeu de régression."""
     def evaluer(item):
         jeu, (question, attendu, note) = item
         debut=time.perf_counter()
@@ -27,6 +31,7 @@ def lancer():
                   "duree_s":round(time.perf_counter()-debut,3)}
         print(f"{jeu}: {obtenu} — attendu {attendu.value}",flush=True)
         return resultat
+    # Limiter le nombre d'appels API simultanés et garder les deux jeux séparés dans les scores.
     with ThreadPoolExecutor(max_workers=3) as pool:
         lignes=list(pool.map(evaluer,[("historique",c) for c in CAS]+[("generalisation",c) for c in NOUVEAUX]))
     rapport={"date_utc":datetime.now(timezone.utc).isoformat(),"modele":MODELE,

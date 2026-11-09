@@ -1,9 +1,7 @@
-"""Comparaison locale : montants compréhensibles → ratios → graphique descriptif.
-
-On ne demande pas à l'utilisateur de calculer ses propres ratios. Les euros
-restent locaux ; seuls des proportions et des mois de revenu sont comparés.
-Les positions décrivent l'échantillon, sans pondération de population.
+"""Valide les montants du formulaire SCF et les convertit en ratios.
+Calcule les positions dans l'échantillon et produit les quatre histogrammes descriptifs.
 """
+
 from pathlib import Path
 import math
 import numpy as np
@@ -15,6 +13,7 @@ from .entrainement import preparer_donnees
 SOURCE = Path(__file__).resolve().parents[1] / "data/raw/scfp2022.parquet"
 
 class MontantsComparaison(BaseModel):
+    """Montants du formulaire SCF, validés avant le calcul des ratios."""
     model_config = ConfigDict(extra="forbid", allow_inf_nan=False)
     age: float = Field(ge=18, le=120)
     epargne_totale_eur: float = Field(gt=0)
@@ -35,6 +34,7 @@ class MontantsComparaison(BaseModel):
         return self
 
     def vers_profil(self, profil: Profil) -> Profil:
+        """Ajoute les ratios SCF à une copie du profil, sans modifier l'épargne en mois de dépenses."""
         donnees = profil.model_dump()
         donnees.update(age=self.age,
             part_actions_actuelle=self.actions_eur / self.epargne_totale_eur,
@@ -46,6 +46,7 @@ class MontantsComparaison(BaseModel):
 def charger_echantillon(chemin: Path | None = None) -> pd.DataFrame:
     # Même population exploitable que le protocole ML, mais valeurs brutes :
     # le rang et la médiane ne sont pas calculés sur les valeurs plafonnées.
+    """Charge les ménages exploitables avec leurs ratios bruts, avant bornage du clustering."""
     brut = pd.read_parquet(chemin or SOURCE)
     _, observations, _ = preparer_donnees(brut)
     if observations.empty:
@@ -63,6 +64,7 @@ INDICATEURS = [
 
 
 def positions(profil: Profil, echantillon: pd.DataFrame) -> list[dict]:
+    """Calcule les médianes et les parts de l'échantillon inférieures ou égales au profil."""
     lignes = []
     for colonne, champ, titre, unite, facteur, borne in INDICATEURS:
         valeur = getattr(profil, champ)
@@ -74,17 +76,16 @@ def positions(profil: Profil, echantillon: pd.DataFrame) -> list[dict]:
         vous = valeur * facteur
         lignes.append(dict(colonne=colonne, titre=titre, unite=unite, vous=vous,
             mediane=float(np.median(valeurs)),
+            # Les ex æquo sont inclus dans la part de ménages sous le repère utilisateur.
             part_inferieure_ou_egale=float(np.mean(valeurs <= vous) * 100),
             effectif=len(valeurs), facteur=facteur, borne=borne))
     return lignes
 
 
 def graphique(profil: Profil, echantillon: pd.DataFrame):
-    """Quatre histogrammes et deux repères. Aucun appel LLM, aucun entraînement.
-
-    On regroupe uniquement la queue de distribution dans la dernière barre
-    pour garder les graphiques lisibles. La valeur de l'utilisateur n'est
-    jamais tronquée : l'axe s'élargit si elle dépasse la borne habituelle.
+    """Trace quatre histogrammes avec les repères utilisateur et médiane.
+    Les valeurs au-delà de la borne sont regroupées dans la dernière barre ;
+    l'axe s'étend pour conserver le repère utilisateur visible.
     """
     from matplotlib.figure import Figure
     from matplotlib.lines import Line2D

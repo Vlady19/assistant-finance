@@ -1,8 +1,7 @@
-"""Cas de validation séparés des exemples historiques, absents du prompt.
-
-Jeu fixé avant la première exécution de la nouvelle règle de classification.
-Après inspection des erreurs, il devient un jeu de régression, pas un test aveugle.
+"""Définit 14 cas complémentaires pour la classification des intentions.
+Une fois les résultats inspectés, ces cas servent de régression et ne sont plus un test aveugle.
 """
+
 from app.intents import Intent as I
 CAS = [
     ("Nasdaq 100 ou Euro Stoxx 50 dans mon compte-titres ?", I.ACTIF_PRECIS, "choix d'indices, autre enveloppe"),

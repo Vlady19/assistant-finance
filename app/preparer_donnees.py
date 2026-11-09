@@ -1,9 +1,7 @@
-"""Récupère SCF 2022 ou utilise le ZIP déjà téléchargé. Aucun LLM.
-
-python -m app.preparer_donnees
-On conserve la source brute et on convertit sans remplacer les codes des
-variables par des catégories textuelles (même format que le projet initial).
+"""Prépare le SCF 2022 depuis le ZIP officiel ou son cache local.
+Vérifie les colonnes, exporte le Parquet et enregistre l'empreinte de la source.
 """
+
 from pathlib import Path
 from io import BytesIO
 from zipfile import ZipFile
@@ -16,6 +14,7 @@ RACINE=Path(__file__).resolve().parents[1]
 URL='https://www.federalreserve.gov/econres/files/scfp2022s.zip'
 
 def main():
+    """Convertit l'archive SCF en Parquet et enregistre la provenance des données."""
     dossier=RACINE/'data/raw';dossier.mkdir(parents=True,exist_ok=True)
     archive=dossier/'scfp2022s.zip'
     if not archive.exists():
@@ -28,6 +27,7 @@ def main():
     with ZipFile(archive) as z:
         fichiers=[n for n in z.namelist() if n.endswith('.dta')]
         if len(fichiers)!=1: raise ValueError('Contenu ZIP inattendu.')
+        # Conserver les codes numériques Stata pour respecter les définitions des variables.
         df=pd.read_stata(BytesIO(z.read(fichiers[0])),convert_categoricals=False)
     if not {'age','equity','fin','liq','norminc','levratio','y1','yy1','wgt'}.issubset(df.columns):
         raise ValueError('Colonnes SCF attendues absentes.')

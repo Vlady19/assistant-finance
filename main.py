@@ -1,8 +1,12 @@
-"""Terminal et Streamlit utilisent désormais exactement le même pipeline."""
+"""Interface de conversation dans le terminal, basée sur app.pipeline.
+Conserve le profil entre les messages et permet de réinitialiser ou terminer la session.
+"""
+
 from app.conversation import profil_vide
 from app.pipeline import traiter
 
 def main():
+    """Lit les messages du terminal et maintient l'état du profil jusqu'à la fermeture."""
     profil=profil_vide()
     question=None
     print("Assistant finance — écrire quitter pour terminer, nouveau pour réinitialiser.")

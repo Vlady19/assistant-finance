@@ -1,5 +1,17 @@
-Données publiques : [Federal Reserve — SCF 2022](https://www.federalreserve.gov/econres/scfindex.htm).
+# Sources brutes du SCF 2022
 
-Reconstruction : `python -m app.preparer_donnees` depuis la racine du projet.
-Le ZIP officiel est mis en cache ; en cas de refus HTTP, le télécharger manuellement sur la page officielle et le placer ici sous `scfp2022s.zip`.
-Les données brutes ne sont pas destinées au dépôt Git. Elles sont conservées dans la copie de travail et dans l'archive de livraison pour permettre une démonstration hors réseau.
+Les données proviennent de la [Federal Reserve](https://www.federalreserve.gov/econres/scfindex.htm).
+
+| Fichier | Rôle |
+|---|---|
+| `scfp2022s.zip` | Cache de l'archive officielle contenant l'extrait synthétique Stata. |
+| `scfp2022.parquet` | Export numérique lu par l'entraînement, l'exploration et la comparaison SCF. |
+
+Préparation depuis la racine du projet : `python -m app.preparer_donnees`.
+Si le téléchargement automatique échoue, l'archive officielle peut être placée
+ici sous le nom `scfp2022s.zip`.
+
+Le fichier brut contient les différentes imputations de l'enquête. La sélection
+du premier implicat et le filtrage des ratios invalides ont lieu dans
+`app/entrainement.py`. Les fichiers de données sont exclus de Git ; ce README
+documente leur préparation.

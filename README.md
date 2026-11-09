@@ -406,6 +406,7 @@ assistant-finance/
 │   ├── entrainement.py
 │   ├── features.py
 │   ├── intents.py
+│   ├── inventaire_donnees.py
 │   ├── llm.py
 │   ├── models.py
 │   ├── pipeline.py
@@ -432,6 +433,17 @@ assistant-finance/
 ```
 
 ---
+
+Les fichiers Python commencent par une description de leur rôle. Les fichiers
+de données, modèles et résultats sont décrits dans les dossiers correspondants :
+
+- [Données SCF](data/README.md) et [sources brutes](data/raw/README.md).
+- [Profil JSON d'exemple](examples/README.md).
+- [Modèles enregistrés](models/README.md).
+- [Rapports et journaux de validation](reports/README.md).
+
+`inventaire_livraison.json` conserve l'inventaire et les empreintes d'une livraison
+historique. Il ne constitue pas un inventaire actualisé après chaque modification.
 
 ## Reproductibilité des données
 

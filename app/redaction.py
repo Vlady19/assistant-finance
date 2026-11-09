@@ -1,16 +1,12 @@
-"""Le LLM explique qualitativement ; Python affiche les valeurs calculées.
-
-Les connaissances générales ne sont pas une source de cours ou de fiscalité
-à jour. Le validateur rejette les chiffres et les formulations détectées
-comme problématiques, mais ne prouve pas la vérité de toutes les phrases.
+"""Rédige les explications qualitatives avec le LLM selon la politique choisie.
+Les chiffres sont affichés séparément par Python ; le texte est contrôlé par validation.py.
 """
+
 
 from .config import MODELE, obtenir_client, ServiceIndisponible
 from .intents import Politique
 
-# ─────────────────────────────────────────────────────────────────────────
-# Le socle commun à toutes les réponses.
-# ─────────────────────────────────────────────────────────────────────────
+# Consigne commune envoyée au modèle de rédaction.
 
 BASE = """\
 Tu rédiges la réponse d'un outil pédagogique de finance personnelle, destiné
@@ -28,10 +24,7 @@ Termine par une phrase courte rappelant que ces éléments sont informatifs et
 ne constituent pas un conseil en investissement.
 """
 
-# ─────────────────────────────────────────────────────────────────────────
-# Une consigne par politique. C'est ici que le routage devient visible :
-# selon le chemin emprunté, le modèle reçoit une mission différente.
-# ─────────────────────────────────────────────────────────────────────────
+# Consigne complémentaire sélectionnée par la politique Python.
 
 CONSIGNES: dict[Politique, str] = {
     Politique.ANALYSER: """\
@@ -85,11 +78,8 @@ personne a une question sur le placement de son épargne.
 
 
 def rediger(politique: Politique, dossier: str, message: str) -> str:
-    """Transforme un dossier calculé en réponse rédigée.
-
-    `dossier` est du texte déjà mis en forme par pipeline.py. Ce fichier
-    n'a pas à savoir comment on formate une répartition : il sait rédiger,
-    c'est tout. Chaque fichier son métier — même principe qu'en V3.
+    """Rédige une explication à partir de la politique, du message et des faits fournis.
+    Le résultat est contrôlé par le pipeline avant son affichage.
     """
 
     systeme = BASE + "\n" + CONSIGNES[politique] + "\n" + (
@@ -109,10 +99,7 @@ def rediger(politique: Politique, dossier: str, message: str) -> str:
             {"role": "system", "content": systeme},
             {"role": "user", "content": contenu},
         ],
-        # gpt-5.6-luna est un modèle de raisonnement : il n'accepte que la
-        # température par défaut (1) et refuse `max_tokens` au profit de
-        # `max_completion_tokens`. Pas de réglage de créativité possible ici,
-        # contrairement aux modèles de chat classiques.
+        # Budget de sortie limité ; la température du modèle n'est pas modifiée.
         max_completion_tokens=700,
     )
 

@@ -1,3 +1,4 @@
+# Versions exactes des dépendances de l'environnement de référence Python 3.14.4.
 altair==6.2.2
 annotated-types==0.8.0
 anyio==4.14.2

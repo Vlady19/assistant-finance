@@ -1,16 +1,18 @@
-"""La même préparation est appliquée à l'entraînement et à chaque prédiction."""
+"""Définit les quatre variables et leur bornage avant standardisation.
+Le même transformateur est utilisé à l'entraînement et à l'inférence.
+"""
+
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
 
 VARIABLES = ["age", "part_risquee", "coussin_mois", "levier"]
 
 class BornerRatios(TransformerMixin, BaseEstimator):
-    """Plafonds hérités de l'EDA : on les conserve et on les documente.
-
-    Les valeurs absentes sont refusées en amont, jamais remplacées ici.
-    Le plafonnement réduit l'effet des valeurs extrêmes sur KMeans.
+    """Plafonne les ratios SCF avant standardisation pour limiter les valeurs extrêmes.
+    Les valeurs manquantes sont traitées en amont, sans imputation dans ce transformateur.
     """
     def fit(self, X, y=None):
+        """Respecte l'interface scikit-learn ; les bornes sont fixes et ne sont pas apprises."""
         return self
     def transform(self, X):
         resultat = pd.DataFrame(X, columns=VARIABLES).copy()

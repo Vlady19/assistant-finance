@@ -1,6 +1,6 @@
 # Comparaison SCF — parcours clarifié, 29 septembre 2026
 
-L'utilisateur a signalé que les ratios demandés n'étaient pas compréhensibles : une somme pouvait être saisie comme un nombre de mois, ou une mensualité comme une proportion d'endettement. Cette évolution corrige la collecte et la présentation, en conservant le modèle existant.
+Ce document décrit l'évolution du formulaire SCF et sa validation du 29 septembre 2026. La saisie de montants en euros remplace celle de ratios, pour limiter les confusions entre montants, durées et proportions. Le modèle existant est conservé.
 
 ## Parcours livré
 
@@ -30,7 +30,7 @@ Le rang affiché est la proportion de ménages de cet échantillon dont la part 
 
 Les informations techniques (distance, identifiant de groupe, variables internes et empreinte du modèle) restent accessibles dans un volet de détails. L'affichage principal emploie des phrases courtes. La barre latérale utilise des libellés français, des euros et des durées, plutôt que les noms de champs et les valeurs booléennes Python.
 
-Le groupe issu du clustering est encore calculé par le modèle V6. Ses moyennes utilisent les plafonds d'entraînement, contrairement aux médianes descriptives brutes ; cette différence est expliquée dans le volet méthodologique. Un profil trop éloigné ne reçoit pas de groupe, mais conserve son graphique de comparaison.
+Le groupe est calculé par le pipeline sauvegardé. Ses moyennes utilisent les plafonds d'entraînement, contrairement aux médianes descriptives brutes ; cette différence est expliquée dans le volet méthodologique. Un profil trop éloigné ne reçoit pas de groupe, mais conserve son graphique de comparaison.
 
 ## Fichiers concernés
 

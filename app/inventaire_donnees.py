@@ -1,23 +1,7 @@
+"""Télécharge ou charge le SCF 2022, puis décrit son contenu.
+Affiche les colonnes, valeurs manquantes, imputations et poids d'enquête, sans entraîner de modèle.
 """
-src/inventaire_donnees.py — première étape de la V6.
 
-    python src/inventaire_donnees.py
-
-Ce script NE PREND AUCUNE DÉCISION. Il télécharge le fichier, l'ouvre, et
-décrit ce qu'il contient. C'est tout.
-
-C'est volontaire, et c'est la même discipline que depuis la V2 : on regarde
-ce qu'on a avant de décider quoi en faire. Choisir un algorithme avant de
-connaître ses données, c'est exactement l'erreur que j'ai commise au premier
-message de notre conversation.
-
-Ce que tu obtiendras : la taille du fichier, la liste complète des colonnes,
-la structure des imputations multiples, et l'état des valeurs manquantes.
-Envoie-moi cette sortie, on décidera de la suite ensemble.
-
-Dépendances :  pip install pandas
-(pandas sait lire le format Stata nativement, rien d'autre à installer)
-"""
 
 import io
 import urllib.request
@@ -26,19 +10,7 @@ from pathlib import Path
 
 import pandas as pd
 
-# ─────────────────────────────────────────────────────────────────────────
-# Le Summary Extract Public Data du Survey of Consumer Finances 2022.
-#
-# Pourquoi l'extrait « summary » et pas le fichier public complet ?
-# Le fichier complet contient plusieurs milliers de variables brutes, avec
-# des noms cryptiques (X5729, X3506...). L'extrait regroupe ces variables
-# en agrégats lisibles et documentés — c'est celui qu'utilise la Réserve
-# fédérale pour ses propres publications. Très largement suffisant ici, et
-# infiniment plus maniable.
-#
-# Si une édition plus récente existe quand tu lis ceci, remplace 2022 par
-# l'année voulue dans l'URL. L'enquête est triennale.
-# ─────────────────────────────────────────────────────────────────────────
+# Extrait synthétique officiel du SCF 2022, contenant les agrégats financiers.
 
 URL = "https://www.federalreserve.gov/econres/files/scfp2022s.zip"
 
@@ -47,7 +19,7 @@ FICHIER_LOCAL = DOSSIER_BRUT / "scfp2022.parquet"
 
 
 def telecharger() -> pd.DataFrame:
-    """Télécharge le zip, extrait le .dta, renvoie un DataFrame."""
+    """Charge le Parquet en cache ou récupère le ZIP SCF et extrait ses données Stata."""
 
     DOSSIER_BRUT.mkdir(parents=True, exist_ok=True)
 
@@ -58,24 +30,13 @@ def telecharger() -> pd.DataFrame:
     zip_local = DOSSIER_BRUT / "scfp2022s.zip"
 
     if zip_local.exists():
-        # Repli manuel : si le téléchargement automatique échoue, tu peux
-        # récupérer le fichier depuis ton navigateur et le déposer ici.
+        # Réutiliser l'archive locale évite un nouveau téléchargement.
         print(f"Archive locale trouvée : {zip_local}")
         contenu = zip_local.read_bytes()
     else:
         print(f"Téléchargement depuis {URL}")
 
-        # ─────────────────────────────────────────────────────────────────
-        # POURQUOI CET EN-TÊTE
-        #
-        # Par défaut, urllib s'identifie comme « Python-urllib/3.x ». De
-        # nombreux serveurs publics rejettent ces requêtes en bloc pour se
-        # protéger des robots : d'où le 403 Forbidden.
-        #
-        # On se présente donc comme un navigateur ordinaire. Le fichier est
-        # public et librement diffusé — on contourne un filtre anti-robot,
-        # pas une restriction d'accès.
-        # ─────────────────────────────────────────────────────────────────
+        # Le User-Agent est précisé pour la requête vers l'archive publique.
         requete = urllib.request.Request(
             URL,
             headers={
@@ -106,9 +67,8 @@ def telecharger() -> pd.DataFrame:
     return df
 
 
-
 def decrire(df: pd.DataFrame) -> None:
-    """Affiche tout ce qu'il faut savoir avant de décider quoi que ce soit."""
+    """Affiche les dimensions, les imputations, les poids et les statistiques des colonnes."""
 
     print("\n" + "=" * 70)
     print("  DIMENSIONS")
@@ -117,21 +77,8 @@ def decrire(df: pd.DataFrame) -> None:
     print(f"  Colonnes : {df.shape[1]}")
     print(f"  Mémoire  : {df.memory_usage(deep=True).sum() / 1_000_000:.0f} Mo")
 
-    # ── Le piège des imputations multiples ────────────────────────────────
-    #
-    # Les réponses manquantes de l'enquête ont été estimées cinq fois par
-    # une méthode statistique. Chaque famille apparaît donc en CINQ
-    # exemplaires, légèrement différents.
-    #
-    #   yy1 = identifiant de la famille
-    #   y1  = identifiant de l'exemplaire (l'« implicate »)
-    #
-    # Si on ignore ça et qu'on lance un clustering sur le fichier brut, on
-    # compte chaque famille cinq fois. Les groupes obtenus n'ont alors plus
-    # de sens statistique.
-    #
-    # Le barème sanctionne ce genre d'erreur bien plus durement qu'un
-    # score médiocre : « c'est la rigueur du protocole qui est évaluée ».
+    # Une famille possède cinq versions imputées : yy1 identifie la famille,
+    # y1 sa version. Le protocole ML sélectionne un implicat pour éviter les doublons.
 
     print("\n" + "=" * 70)
     print("  STRUCTURE DES IMPUTATIONS MULTIPLES")
@@ -146,14 +93,8 @@ def decrire(df: pd.DataFrame) -> None:
     else:
         print("  Colonnes yy1 / y1 absentes : structure à vérifier manuellement.")
 
-    # ── Les pondérations ─────────────────────────────────────────────────
-    #
-    # Une enquête ne tire pas les ménages au hasard uniforme : les hauts
-    # patrimoines sont volontairement sur-représentés, sinon on n'en
-    # observerait presque aucun. Le poids (wgt) corrige ce biais.
-    #
-    # Conséquence : une moyenne calculée sans les poids décrit l'échantillon,
-    # pas la population. C'est un point à traiter et à expliquer.
+    # Les poids wgt permettent de distinguer les statistiques de l'échantillon
+    # des estimations de population ; leur présence est décrite ici.
 
     print("\n" + "=" * 70)
     print("  PONDÉRATIONS")
@@ -165,7 +106,7 @@ def decrire(df: pd.DataFrame) -> None:
     else:
         print("  Colonne wgt absente.")
 
-    # ── Inventaire des colonnes ──────────────────────────────────────────
+    # Inventaire des types et des valeurs manquantes, colonne par colonne.
 
     print("\n" + "=" * 70)
     print("  COLONNES (nom, type, valeurs manquantes, exemple)")
@@ -179,15 +120,13 @@ def decrire(df: pd.DataFrame) -> None:
         print(f"  {nom:<18} {str(serie.dtype):<10} "
               f"manquants {taux:>5.1f} %   ex. {exemple}")
 
-    # ── Statistiques des colonnes numériques ─────────────────────────────
+    # Statistiques descriptives des principaux agrégats financiers.
 
     print("\n" + "=" * 70)
     print("  APERÇU NUMÉRIQUE (colonnes les plus utiles a priori)")
     print("=" * 70)
 
-    # On regarde si les variables classiques du SCF sont là. Je les cite de
-    # mémoire : vérifie-les dans le codebook officiel plutôt que de me faire
-    # confiance. Une variable mal comprise fausse tout le clustering.
+    # Liste indicative à interpréter avec le dictionnaire officiel de l'enquête.
     attendues = [
         "age", "income", "norminc", "networth", "asset", "debt",
         "fin", "nfin", "liq", "stocks", "bond", "nmmf", "retqliq",
@@ -208,7 +147,7 @@ if __name__ == "__main__":
     decrire(donnees)
 
     print("\n" + "=" * 70)
-    print("  Copie cette sortie et envoie-la moi.")
-    print("  On choisira les variables de segmentation ensemble, ")
-    print("  une fois qu'on saura ce qu'il y a réellement dedans.")
+    print("  Inventaire SCF terminé.")
+    print("  Préparation des données : python -m app.preparer_donnees")
+    print("  Entraînement du modèle : python -m app.entrainement")
     print("=" * 70 + "\n")

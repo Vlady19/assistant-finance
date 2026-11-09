@@ -1,26 +1,12 @@
+"""Extrait un Profil structuré depuis un message avec l'API OpenAI.
+Utilise le profil connu et la dernière question pour interpréter les réponses courtes.
 """
-app/llm.py — V3
 
-# 🤖 Extrait les informations du message vers le Profil
-
-Une seule différence avec la V2 : la fonction reçoit maintenant le profil
-déjà connu et la dernière question posée, et les transmet au modèle.
-
-Pourquoi c'est nécessaire ? Imagine la conversation :
-
-    Assistant : Résidez-vous fiscalement en France ?
-    Vous       : oui
-
-Le mot « oui », isolé, ne veut rien dire. Le modèle a besoin de savoir à
-quelle question il répond. On lui donne donc juste ce qu'il faut de
-contexte — pas tout l'historique, seulement l'utile.
-"""
 
 from .config import MODELE, obtenir_client, ServiceIndisponible
 from .models import Profil
 
-# Remarque les accolades {profil_connu} et {derniere_question} : ce sont des
-# emplacements que la méthode .format() remplira juste avant l'envoi.
+# Consigne d'extraction envoyée au LLM ; format() ajoute le contexte du profil.
 PROMPT_EXTRACTION = """\
 Tu extrais des informations d'un message. Tu ne réponds pas à la question posée,
 tu ne donnes aucun conseil.
@@ -57,12 +43,9 @@ def extraire_profil(
     profil_connu_resume: str,
     derniere_question: str | None = None,
 ) -> Profil:
-    """Extrait un profil du message, en tenant compte du contexte connu.
-
-    `profil_connu_resume` est le texte produit par
-    conversation.resume_lisible(). On passe du texte déjà formaté plutôt
-    qu'un objet Profil : ce fichier n'a pas à savoir comment on met en forme
-    un profil, c'est le rôle de conversation.py. Chaque fichier son métier.
+    """Extrait les informations du message selon le schéma Profil.
+    Le résumé du profil et la dernière question apportent le contexte ;
+    la fusion des valeurs est effectuée ensuite par conversation.py.
     """
 
     systeme = PROMPT_EXTRACTION.format(

@@ -1,4 +1,7 @@
-"""Configuration chargée à la demande : ouvrir l'interface ne nécessite pas de clé."""
+"""Charge la configuration OpenAI depuis l'environnement ou le fichier .env.
+Crée le client à la demande pour permettre les calculs locaux sans clé API.
+"""
+
 import os
 from pathlib import Path
 from functools import lru_cache
@@ -14,6 +17,7 @@ class ServiceIndisponible(RuntimeError):
 
 @lru_cache(maxsize=1)
 def obtenir_client():
+    """Crée et met en cache le client ; signale l'absence de clé au premier besoin d'API."""
     cle = os.getenv("OPENAI_API_KEY")
     if not cle:
         raise ServiceIndisponible("Clé API absente : renseignez OPENAI_API_KEY dans .env.")

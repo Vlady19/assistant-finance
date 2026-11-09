@@ -1,4 +1,7 @@
-"""Étape facultative de l'interface, séparée de la collecte du profil de base."""
+"""Affiche le formulaire SCF facultatif dans Streamlit et ses résultats.
+Gère les saisies, le choix de comparaison et le téléchargement du graphique, sans appel LLM.
+"""
+
 from io import BytesIO
 import streamlit as st
 from pydantic import ValidationError
@@ -30,6 +33,7 @@ CHAMPS = [
 
 
 def afficher(profil: Profil):
+    """Gère le choix de comparaison, la saisie locale et la validation des montants."""
     st.session_state.setdefault("scf_choix", None)
     st.session_state.setdefault("scf_resultat", None)
     with st.container(border=True):
@@ -94,6 +98,7 @@ def afficher(profil: Profil):
 
 
 def _afficher_resultat(resultat):
+    """Affiche les distributions, le résultat du modèle et les détails méthodologiques."""
     profil = Profil.model_validate(resultat["profil"])
     try:
         echantillon = echantillon_public()

@@ -1,8 +1,7 @@
-"""Parcours réels avec références définies indépendamment de la réponse de l'agent.
-
-Les textes sont synthétiques. Les assertions testent les résultats structurés,
-pas une formulation exacte. Lancer : python -m evals.parcours (clé API nécessaire).
+"""Évalue l'extraction et les parcours conversationnels avec de vrais appels API.
+Utilise des profils fictifs et des résultats attendus définis avant les appels.
 """
+
 import json
 import time
 from pathlib import Path
@@ -24,7 +23,9 @@ EXTRACTIONS=[
 
 
 def lancer():
+    """Vérifie extractions, parcours et mémoire du profil sur des scénarios fictifs."""
     lignes=[]
+    # Comparer les champs extraits à des références fixes, sans imposer une formulation du texte.
     for question,attendu in EXTRACTIONS:
         try:
             obtenu=llm.extraire_profil('Scénario entièrement fictif pour un test logiciel : '+question,'aucun').model_dump()

@@ -1,8 +1,7 @@
-"""EDA mise à jour depuis celle de Claude. Exécution : python -m notebooks.eda_clustering.
-
-Ce script fait l'EDA ; python -m app.entrainement valide et sauvegarde le ML.
-Séparer ces deux tâches évite qu'un graphique réentraîne le modèle de l'app.
+"""Explore les variables SCF et génère les graphiques et le rapport EDA.
+Lit les résultats d'entraînement pour comparer K, sans réentraîner le modèle.
 """
+
 import json
 from pathlib import Path
 import matplotlib
@@ -14,6 +13,7 @@ from app.entrainement import preparer_donnees
 RACINE=Path(__file__).resolve().parents[1]
 
 def main():
+    """Produit les distributions, le graphique des silhouettes et le dictionnaire des variables."""
     brut=pd.read_parquet(RACINE/'data/raw/scfp2022.parquet')
     df,X,qualite=preparer_donnees(brut)
     fig,axes=plt.subplots(2,2,figsize=(11,8))
@@ -24,6 +24,7 @@ def main():
     for ax in axes.flat: ax.set_ylabel('Nombre de ménages')
     fig.suptitle('SCF 2022 — premier implicat, observations valides, non pondéré')
     fig.tight_layout();fig.savefig(RACINE/'reports/figures/eda_exploration.png',dpi=160);plt.close(fig)
+    # Les silhouettes proviennent du rapport existant ; tracer ne réentraîne pas le modèle.
     protocole=json.loads((RACINE/'reports/protocole_ml.json').read_text())
     fig,ax=plt.subplots(figsize=(7,4))
     valeurs=protocole['comparaisons_train']; ax.bar([r['k'] for r in valeurs],[r['silhouette_train'] for r in valeurs])

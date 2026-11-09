@@ -1,41 +1,11 @@
+"""Applique les règles pédagogiques d'allocation sans appel LLM.
+Calcule la capacité de risque, le niveau retenu, les répartitions et les alertes.
 """
-app/regles.py — le cerveau du projet. Aucun modèle de langage ici.
 
-# 🧮 Fait les calculs et applique les règles métier
-
-=============================================================================
- POURQUOI CE FICHIER EXISTE
-=============================================================================
-
-Ouvre-le et cherche le mot « client », « prompt » ou « openai ». Il n'y en a
-aucun. C'est délibéré, et c'est toute la leçon de la V2.
-
-Compare deux façons de faire :
-
-  A) Tu écris dans le system prompt : « si l'horizon est inférieur à 5 ans,
-     recommande une allocation prudente ». Le modèle suivra... la plupart du
-     temps. Tu ne sauras jamais quand il ne l'a pas fait.
-
-  B) Tu écris `if horizon < 5:` dans une fonction Python. Ça marche à 100 %,
-     tu peux le tester, et n'importe qui peut lire la règle et la contester.
-
-Un LLM est excellent pour comprendre « j'ai dix mille balles de côté » et en
-tirer 10000. Il est inutile pour calculer 10000 × 0,3. Confie-lui la
-compréhension du langage, garde le raisonnement chiffré pour toi.
-
-Effet secondaire immédiat : ces fonctions sont testables. Tu peux appeler
-`capacite_risque(...)` cent fois avec cent profils différents, sans dépenser
-un centime d'API et sans attendre le réseau. C'est impossible avec du code
-noyé dans un prompt.
-"""
 
 from .models import Profil
 
-# ─────────────────────────────────────────────────────────────────────────
-# Les seuils sont des constantes nommées, pas des nombres perdus dans le
-# code. Quand tu voudras discuter « pourquoi 3 mois et pas 6 ? », tu sauras
-# où regarder — et tu n'auras qu'un seul endroit à modifier.
-# ─────────────────────────────────────────────────────────────────────────
+# Seuils pédagogiques centralisés pour le calcul de capacité et les prérequis.
 
 EPARGNE_PRECAUTION_MINIMALE_MOIS = 3.0
 HORIZON_MINIMUM_ACTIONS_ANNEES = 5.0
@@ -45,36 +15,20 @@ NIVEAUX_INVERSE = {"prudent": 1, "equilibre": 2, "dynamique": 3}
 
 
 def champs_manquants(profil: Profil) -> list[str]:
-    """Renvoie la liste des champs restés à None.
-
-    `model_dump()` transforme l'objet Pydantic en dictionnaire Python
-    classique. On parcourt ce dictionnaire et on garde les clés dont la
-    valeur est None.
-
-    Attention à la nuance : on teste `is None` et non `not valeur`. Avec
-    `not valeur`, le chiffre 0 serait considéré comme manquant — or 0 mois
-    d'épargne de précaution est une information capitale, pas un vide.
-    """
+    """Liste les informations principales à None ; une valeur nulle reste connue."""
     return [
         champ for champ in ("montant_eur", "horizon_annees", "tolerance_risque", "epargne_precaution_mois", "resident_francais") if getattr(profil, champ) is None
     ]
 
 
 def capacite_risque(profil: Profil) -> int | None:
-    """Calcule le risque que la situation de la personne *permet* (1 à 3).
-
-    À distinguer de la tolérance déclarée, qui est ce qu'elle *dit* accepter.
-    Quelqu'un peut se sentir audacieux tout en ayant besoin de son argent
-    dans dix-huit mois : son ressenti ne change rien à cette contrainte.
-
-    Renvoie None si l'horizon est inconnu. Sans horizon, la question n'a
-    pas de sens, et il vaut mieux poser la question qu'inventer une réponse.
+    """Calcule un niveau de capacité de 1 à 3 selon l'horizon et la précaution.
+    Renvoie None si l'horizon n'est pas connu.
     """
     if profil.horizon_annees is None:
         return None
 
-    # L'horizon domine tout le reste : c'est la seule variable qui détermine
-    # si on a le temps d'encaisser une baisse avant d'avoir besoin des fonds.
+    # L'horizon fixe la capacité initiale, avant le contrôle de la précaution.
     if profil.horizon_annees < 2:
         niveau = 1
     elif profil.horizon_annees < HORIZON_MINIMUM_ACTIONS_ANNEES:
@@ -82,8 +36,7 @@ def capacite_risque(profil: Profil) -> int | None:
     else:
         niveau = 3
 
-    # Sans coussin de sécurité, le moindre imprévu force à vendre — et les
-    # imprévus tombent rarement quand les marchés sont au plus haut.
+    # Une précaution insuffisante ramène la capacité au niveau prudent.
     manque_de_coussin = (
         profil.epargne_precaution_mois is not None
         and profil.epargne_precaution_mois < EPARGNE_PRECAUTION_MINIMALE_MOIS
@@ -95,17 +48,7 @@ def capacite_risque(profil: Profil) -> int | None:
 
 
 def niveau_retenu(profil: Profil) -> int | None:
-    """Le niveau effectivement appliqué : le plus faible des deux.
-
-    Règle simple et défendable :
-      - la capacité ne doit jamais pousser quelqu'un au-delà de ce qu'il
-        accepte psychologiquement (il vendrait à la première secousse)
-      - la tolérance ne doit jamais dépasser ce que sa situation permet
-        (il serait forcé de vendre au mauvais moment)
-
-    Donc : minimum des deux. Une ligne de code, mais c'est le cœur du
-    raisonnement de tout conseiller sérieux.
-    """
+    """Retient le minimum entre capacité calculée et tolérance déclarée."""
     capacite = capacite_risque(profil)
     if capacite is None or profil.tolerance_risque is None:
         return None
@@ -115,21 +58,14 @@ def niveau_retenu(profil: Profil) -> int | None:
 
 
 def ecart_avec_le_souhait(profil: Profil) -> int | None:
-    """Positif si la personne voulait plus de risque que sa situation permet.
-
-    C'est le chiffre le plus utile à lui montrer : il transforme un refus
-    en explication.
-    """
+    """Mesure l'écart entre tolérance et capacité ; positif si la tolérance dépasse la capacité."""
     capacite = capacite_risque(profil)
     if capacite is None or profil.tolerance_risque is None:
         return None
     return NIVEAUX_INVERSE[profil.tolerance_risque] - capacite
 
 
-# Trois répartitions volontairement grossières. Elles servent à illustrer le
-# mécanisme, pas à être suivies. La V4 les remplacera par quelque chose de
-# sérieux, avec les enveloppes fiscales françaises et de vraies classes
-# d'actifs.
+# Répartitions pédagogiques fixes ; elles ne sont pas optimisées ni apprises sur le SCF.
 REPARTITIONS = {
     1: {"Fonds sécurisés (fonds euros, monétaire)": 75, "Actions diversifiées": 25},
     2: {"Fonds sécurisés (fonds euros, monétaire)": 45, "Actions diversifiées": 55},
@@ -138,16 +74,12 @@ REPARTITIONS = {
 
 
 def repartition(niveau: int) -> dict[str, int]:
+    """Renvoie la répartition pédagogique fixe associée au niveau retenu."""
     return REPARTITIONS[niveau]
 
 
 def alertes(profil: Profil) -> list[str]:
-    """Points de vigilance calculés depuis le profil.
-
-    Ce ne sont pas des avertissements décoratifs : ce sont des prérequis.
-    Investir sans épargne de précaution, ce n'est pas « un peu risqué »,
-    c'est faire les choses dans le mauvais ordre.
-    """
+    """Construit les avertissements liés à l'horizon, la précaution, le risque et la résidence."""
     messages = []
 
     if (
@@ -184,7 +116,9 @@ def alertes(profil: Profil) -> list[str]:
 
 
 def allocation_autorisee(profil: Profil) -> bool:
-    """Seuils pédagogiques du projet, pas seuils optimaux démontrés par SCF."""
+    """Vérifie le profil complet, l'horizon minimal et la précaution minimale.
+    Ces seuils sont des règles pédagogiques, pas des résultats appris sur le SCF.
+    """
     return (not champs_manquants(profil)
             and profil.horizon_annees >= 2
             and profil.epargne_precaution_mois >= EPARGNE_PRECAUTION_MINIMALE_MOIS)

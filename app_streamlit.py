@@ -1,4 +1,7 @@
-"""Interface V6 : collecte, conversation et preuves de calcul conservées en session."""
+"""Interface Streamlit du chat et du formulaire d'analyse locale.
+Conserve le profil et les messages en session, affiche les calculs et propose la comparaison SCF.
+"""
+
 import inspect
 from dataclasses import asdict
 import streamlit as st
@@ -14,6 +17,7 @@ if "profil" not in st.session_state:
 
 
 def memoriser(reponse):
+    """Conserve le profil et la réponse, puis réinitialise la proposition SCF après une analyse."""
     st.session_state.profil = reponse.profil
     st.session_state.derniere_question = reponse.derniere_question
     st.session_state.messages.append({"role": "assistant", "reponse": asdict(reponse)})
@@ -24,6 +28,7 @@ def memoriser(reponse):
 
 
 def afficher(message):
+    """Affiche un message, les résultats Python et les détails de validation disponibles."""
     with st.chat_message(message["role"]):
         if message["role"] == "user":
             st.markdown(message["texte"])
@@ -31,9 +36,8 @@ def afficher(message):
         r = message["reponse"]
         st.markdown(r["texte"])
         if r["dossier"]:
-            # Les anciennes sessions peuvent contenir le dossier SCF V6.
-            # Reconstruire l'affichage depuis la trace masque aussi cet ancien
-            # bloc automatique, sans effacer les messages de l'utilisateur.
+            # Reconstruire depuis la trace conserve l'historique tout en réservant
+            # la comparaison SCF au formulaire facultatif.
             dossier = (pipeline.dossier_depuis_trace(r["trace"], inclure_comparaison=False)
                        if r["trace"].get("allocation_illustrative") is not None else r["dossier"])
             st.markdown(dossier.replace("Résultats calculés par Python", "Votre situation"))
